@@ -1,0 +1,30 @@
+# Node.js
+node_modules/
+
+# Archivos generados por el build
+/build
+/dist
+
+# Archivos de configuración
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencias de desarrollo
+/.pnp
+.pnp.js
+/.pnp.js
+
+# Dependencias binarias
+/node_modules
+/.cache
+/public
+.DS_Store
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# testing
+/coverage

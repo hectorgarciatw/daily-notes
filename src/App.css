@@ -1,0 +1,4 @@
+/* Establecer el tamaño del padding del navbar */
+.p-5 {
+    padding: 0.5rem !important; /* Usando !important para asegurar que sobrescriba el valor anterior */
+}

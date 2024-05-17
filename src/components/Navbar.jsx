@@ -1,29 +1,85 @@
-import React from "react";
+import React, { useState } from 'react';
 
 function Navbar() {
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
-        <header className="bg-red-500 text-white body-font">
-            <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-                <nav className="flex lg:w-2/5 flex-wrap items-center text-base md:ml-auto">
-                    <a className="mr-5 hover:text-gray-900">Notas</a>
-                    <a className="mr-5 hover:text-gray-900">Recordatorios</a>
-                    <a className="mr-5 hover:text-gray-900">Notas archivadas</a>
-                    <a className="hover:text-gray-900">Papelera</a>
-                </nav>
-                <a className="flex order-first lg:order-none lg:w-1/5 title-font font-medium items-center text-gray-900 lg:items-center lg:justify-center mb-4 md:mb-0">
-                    <img src="/assets/images/logo.png" alt="Logo" className="w-16 h-16" />
-                    <span className="ml-2 text-xl text-white">Daily Notes</span>
-                </a>
-                <div className="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
-                    <button className="inline-flex items-center bg-green-500 border-0 py-1 px-3 focus:outline-none hover:bg-green-400 rounded text-base mt-4 md:mt-0">
-                        Crear nota
-                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 ml-1" viewBox="0 0 24 24">
-                            <path d="M5 12h14M12 5l7 7-7 7"></path>
-                        </svg>
-                    </button>
+        <nav className="relative bg-white shadow dark:bg-gray-800">
+            <div className="container px-6 py-4 mx-auto">
+                <div className="lg:flex lg:items-center lg:justify-between">
+                    <div className="flex items-center justify-between">
+                        <a href="#">
+                            <img className="w-16 h-16" src="/assets/images/logo.png" alt="" />
+                        </a>
+
+                        <div className="flex lg:hidden">
+                            <button
+                                onClick={() => setIsOpen(!isOpen)}
+                                type="button"
+                                className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+                                aria-label="toggle menu"
+                            >
+                                {isOpen ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 8h16M4 16h16" />
+                                    </svg>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div
+                        className={`${
+                            isOpen ? 'block' : 'hidden'
+                        } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
+                    >
+                        <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
+                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                Notas
+                            </a>
+                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                Recordatorios
+                            </a>
+                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                Notas archivadas
+                            </a>
+                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                Papelera
+                            </a>
+                        </div>
+
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            <button
+                                className="hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none"
+                                aria-label="show notifications"
+                            >
+                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M15 17H20L18.5951 15.5951C18.2141 15.2141 18 14.6973 18 14.1585V11C18 8.38757 16.3304 6.16509 14 5.34142V5C14 3.89543 13.1046 3 12 3C10.8954 3 10 3.89543 10 5V5.34142C7.66962 6.16509 6 8.38757 6 11V14.1585C6 14.6973 5.78595 15.2141 5.40493 15.5951L4 17H9M15 17V18C15 19.6569 13.6569 21 12 21C10.3431 21 9 19.6569 9 18V17M15 17H9"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </button>
+
+                            <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
+                                <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
+                                    <img src="/assets/images/avatar.png" className="object-cover w-full h-full" alt="avatar" />
+                                </div>
+
+                                <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">H. García</h3>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
+        </nav>
     );
 }
 

@@ -19,7 +19,6 @@ node_modules/
 # Dependencias binarias
 /node_modules
 /.cache
-/public
 .DS_Store
 
 npm-debug.log*

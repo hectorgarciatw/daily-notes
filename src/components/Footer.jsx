@@ -1,38 +1,56 @@
-import React from "react";
+import React from 'react';
 
 function Footer() {
     return (
-        <footer className="text-gray-600 body-font">
-            <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-                <a className="flex title-font font-medium items-center md:justify-start justify-center text-gray-900">
-                    <img src="/assets/images/logo.png" alt="Logo" className="w-16 h-16" />
-                    <span className="ml-3 text-xl">Daily Notes</span>
-                </a>
-                <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2024 ☕️ Desarrollado por H. García</p>
-                <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-                    <a className="text-gray-500">
-                        <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                        </svg>
-                    </a>
-                    <a className="ml-3 text-gray-500">
-                        <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-                        </svg>
-                    </a>
-                    <a className="ml-3 text-gray-500">
-                        <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"></path>
-                        </svg>
-                    </a>
-                    <a className="ml-3 text-gray-500">
-                        <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0" className="w-5 h-5" viewBox="0 0 24 24">
-                            <path stroke="none" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"></path>
-                            <circle cx="4" cy="4" r="2" stroke="none"></circle>
-                        </svg>
-                    </a>
-                </span>
+        <footer className="bg-white dark:bg-gray-900 py-8 bottom-0  w-full">
+            <div className="container px-6 py-8 mx-auto">
+                <div className="flex flex-col items-center text-center">
+                    <div className="w-20 h-20 overflow-hidden border-2 border-gray-400 rounded-full">
+                        <img src="/assets/images/avatar.png" className="object-cover w-full h-full" alt="avatar" />
+                    </div>
+
+                    <p className="max-w-md mx-auto mt-4 text-gray-500 dark:text-gray-400">☕️ Aplicación desarrollada por H. García</p>
+
+                    <div className="flex flex-col mt-4 sm:flex-row sm:items-center sm:justify-center">
+                        <button className="flex items-center justify-center order-1 w-full px-2 py-2 mt-3 text-sm tracking-wide text-gray-600 capitalize transition-colors duration-300 transform border rounded-md sm:mx-2 dark:border-gray-400 dark:text-gray-300 sm:mt-0 sm:w-auto hover:bg-gray-50 focus:outline-none focus:ring dark:hover:bg-gray-800 focus:ring-gray-300 focus:ring-opacity-40">
+                            <svg className="w-5 h-5 mx-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C21.9939 17.5203 17.5203 21.9939 12 22ZM4 12.172C4.04732 16.5732 7.64111 20.1095 12.0425 20.086C16.444 20.0622 19.9995 16.4875 19.9995 12.086C19.9995 7.68451 16.444 4.10977 12.0425 4.086C7.64111 4.06246 4.04732 7.59876 4 12V12.172ZM10 16.5V7.5L16 12L10 16.5Z"
+                                    fill="currentColor"
+                                ></path>
+                            </svg>
+
+                            <span className="mx-1">Visitar GitHub</span>
+                        </button>
+
+                        <button className="w-full px-5 py-2 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md sm:mx-2 sm:order-2 sm:w-auto hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
+                            Mi sitio web
+                        </button>
+                    </div>
+                </div>
+
+                <hr className="my-10 border-gray-200 dark:border-gray-700" />
+
+                <div className="flex flex-col items-center sm:flex-row sm:justify-between">
+                    <p className="text-sm text-gray-500">© Copyright 2024 Implementado con ❤️ en Córdoba capital</p>
+
+                    <div className="flex mt-3 -mx-2 sm:mt-0">
+                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                            {' '}
+                            Mi blog personal{' '}
+                        </a>
+
+                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                            {' '}
+                            Visita mi GitHub{' '}
+                        </a>
+
+                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                            {' '}
+                            Contacto{' '}
+                        </a>
+                    </div>
+                </div>
             </div>
         </footer>
     );

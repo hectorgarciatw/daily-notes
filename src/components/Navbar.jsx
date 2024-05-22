@@ -8,8 +8,9 @@ function Navbar() {
             <div className="container px-6 py-4 mx-auto">
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="flex items-center justify-between">
-                        <a href="#">
-                            <img className="w-16 h-16" src="/assets/images/logo.png" alt="" />
+                        <a className="flex items-center space-x-2">
+                            <span className="text-4xl">📌</span>
+                            <span className="text-2xl text-white font-semibold">QuickClips</span>
                         </a>
 
                         <div className="flex lg:hidden">

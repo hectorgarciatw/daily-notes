@@ -9,7 +9,7 @@ function Footer() {
                         <img src="/assets/images/avatar.png" className="object-cover w-full h-full" alt="avatar" />
                     </div>
 
-                    <p className="max-w-md mx-auto mt-4 text-gray-500 dark:text-gray-400">☕️ Aplicación desarrollada por H. García</p>
+                    <p className="max-w-md mx-auto mt-4 text-white">☕️ Aplicación desarrollada por H. García</p>
 
                     <div className="flex flex-col mt-4 sm:flex-row sm:items-center sm:justify-center">
                         <button className="flex items-center justify-center order-1 w-full px-2 py-2 mt-3 text-sm tracking-wide text-gray-600 capitalize transition-colors duration-300 transform border rounded-md sm:mx-2 dark:border-gray-400 dark:text-gray-300 sm:mt-0 sm:w-auto hover:bg-gray-50 focus:outline-none focus:ring dark:hover:bg-gray-800 focus:ring-gray-300 focus:ring-opacity-40">
@@ -32,20 +32,20 @@ function Footer() {
                 <hr className="my-10 border-gray-200 dark:border-gray-700" />
 
                 <div className="flex flex-col items-center sm:flex-row sm:justify-between">
-                    <p className="text-sm text-gray-500">© Copyright 2024 Implementado con ❤️ en Córdoba capital</p>
+                    <p className="text-sm text-white">© Copyright 2024 Implementado con ❤️ en Córdoba capital</p>
 
                     <div className="flex mt-3 -mx-2 sm:mt-0">
-                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                        <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
                             {' '}
                             Mi blog personal{' '}
                         </a>
 
-                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                        <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
                             {' '}
                             Visita mi GitHub{' '}
                         </a>
 
-                        <a href="#" className="mx-2 text-sm text-gray-500 transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                        <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
                             {' '}
                             Contacto{' '}
                         </a>

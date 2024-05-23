@@ -1,10 +1,9 @@
-import './App.css';
-import Content from './components/Content';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import Sidebar from './components/Sidebar';
+import React from "react";
+import Content from "../components/Content";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-function App() {
+const Dashboard = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
@@ -16,5 +15,6 @@ function App() {
             <Footer />
         </div>
     );
-}
-export default App;
+};
+
+export default Dashboard;

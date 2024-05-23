@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Asegúrate de tener esta importación
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Asegúrate de tener esta importación
 
 // Importa los iconos específicos que necesitas usar
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,10 +13,10 @@ function Navbar() {
             <div className="container px-6 py-4 mx-auto">
                 <div className="lg:flex lg:items-center lg:justify-between">
                     <div className="flex items-center justify-between">
-                        <a className="flex items-center space-x-2">
+                        <div className="center-vertical">
                             <span className="text-4xl">📌</span>
-                            <span className="text-2xl text-white font-semibold">QuickClips</span>
-                        </a>
+                            <span className="slogan text-2xl text-white font-semibold">QuickClips</span>
+                        </div>
 
                         <div className="flex lg:hidden">
                             <button
@@ -40,7 +40,7 @@ function Navbar() {
 
                     <div
                         className={`${
-                            isOpen ? "block" : "hidden"
+                            isOpen ? 'block' : 'hidden'
                         } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
                     >
                         <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">

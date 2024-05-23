@@ -35,19 +35,19 @@ function Card({ title, type, content, priority, url, released }) {
                 <div className="flex items-center justify-center mt-4">
                     {/* Enlaces para acciones */}
                     <a href="#" className="text-gray-300 text-base mr-2">
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
                     </a>
                     <a href="#" className="text-gray-300 text-base mr-2">
-                        <FontAwesomeIcon icon={faLink} />
+                        <FontAwesomeIcon icon={faLink} className="hover:text-red-500" />
                     </a>
                     <a href="#" className="text-gray-300 text-base mr-2">
-                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={faStar} className="hover:text-red-500" />
                     </a>
                     <a href="#" className="text-gray-300 text-base mr-2">
-                        <FontAwesomeIcon icon={faBrush} />
+                        <FontAwesomeIcon icon={faBrush} className="hover:text-red-500" />
                     </a>
                     <a href="#" className="text-gray-300 text-base">
-                        <FontAwesomeIcon icon={faPen} />
+                        <FontAwesomeIcon icon={faPen} className="hover:text-red-500" />
                     </a>
                 </div>
             </div>

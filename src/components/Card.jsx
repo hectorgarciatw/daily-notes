@@ -1,21 +1,20 @@
-import React from 'react';
-import { capitalizeFirstLetter } from '../utils/utils';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Asegúrate de tener esta importación
+import React from "react";
+import { capitalizeFirstLetter } from "../utils/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faLink, faStar, faPen, faBrush } from "@fortawesome/free-solid-svg-icons";
 
-// Importa los iconos específicos que necesitas usar
-import { faTrash, faLink, faStar, faPen, faBrush } from '@fortawesome/free-solid-svg-icons';
-
-function Card({ title, type, content, priority, url, released }) {
+function Card({ id, title, type, content, priority, url, released, onDelete }) {
+    // Añadir 'id' y 'onDelete' a las props
     const getPriorityColor = (priority) => {
         switch (priority.toLowerCase()) {
-            case 'importante':
-                return 'bg-red-300 dark:bg-red-400 text-white dark:text-white';
-            case 'ocasional':
-                return 'bg-blue-200 dark:bg-blue-300 text-blue-800 dark:text-blue-900';
-            case 'urgente':
-                return 'bg-red-600 dark:bg-red-500 text-white dark:text-white';
+            case "importante":
+                return "bg-red-300 dark:bg-red-400 text-white dark:text-white";
+            case "ocasional":
+                return "bg-blue-200 dark:bg-blue-300 text-blue-800 dark:text-blue-900";
+            case "urgente":
+                return "bg-red-600 dark:bg-red-500 text-white dark:text-white";
             default:
-                return 'bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900';
+                return "bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900";
         }
     };
 
@@ -34,10 +33,10 @@ function Card({ title, type, content, priority, url, released }) {
             <div>
                 <div className="flex items-center justify-center mt-4">
                     {/* Enlaces para acciones */}
-                    <a href="#" className="text-gray-300 text-base mr-2">
+                    <a href="#" className="text-gray-300 text-base mr-2" onClick={() => onDelete(id)}>
                         <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
                     </a>
-                    <a href="#" className="text-gray-300 text-base mr-2">
+                    <a href={url} className="text-gray-300 text-base mr-2">
                         <FontAwesomeIcon icon={faLink} className="hover:text-red-500" />
                     </a>
                     <a href="#" className="text-gray-300 text-base mr-2">

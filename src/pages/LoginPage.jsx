@@ -1,11 +1,27 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, googleProvider } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        navigate('/dashboard');
+        navigate("/dashboard");
+    };
+
+    const signInWithGoogle = async () => {
+        console.log("Ingresando con Google");
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+
+            console.log("Nombre: ", result.user.displayName);
+            console.log("Correo electrónico: ", result.user.email);
+            console.log("Foto de perfil: ", result.user.photoURL);
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Error al iniciar sesión con Google", error);
+        }
     };
 
     return (
@@ -75,11 +91,13 @@ const LoginPage = () => {
                         />
                     </svg>
 
-                    <span className="mx-2">Ingresar con Google</span>
+                    <span onClick={signInWithGoogle} className="mx-2">
+                        Ingresar con Google
+                    </span>
                 </a>
 
                 <p className="mt-8 text-xs font-light text-center text-gray-400">
-                    No tienes una cuenta?{' '}
+                    No tienes una cuenta?{" "}
                     <a href="#" className="font-medium text-red-500 hover:underline">
                         Crear cuenta
                     </a>

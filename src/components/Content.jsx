@@ -43,7 +43,6 @@ function Content() {
     }, []);
 
     const openModal = (id) => {
-        console.log(`Eliminar ${id}`);
         setClipToDelete(id);
         setIsModalOpen(true);
     };

@@ -1,5 +1,7 @@
 import React from "react";
+// Funciones auxiliares
 import { capitalizeFirstLetter } from "../utils/utils";
+// Iconos
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faLink, faStar, faPen, faBrush } from "@fortawesome/free-solid-svg-icons";
 

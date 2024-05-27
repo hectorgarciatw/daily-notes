@@ -1,24 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, googleProvider } from "../firebase";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
 
 const LoginPage = () => {
+    // Estado del avatar del usuario
+    const [photoURL, setPhotoURL] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // Escucha los cambios de autenticación del usuario
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario ya autenticado, redirigir al dashboard
+                navigate("/dashboard", { state: { photoURL: user.photoURL, userName: user.displayName } });
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
 
     const handleLogin = () => {
         navigate("/dashboard");
     };
 
+    // Inicio de sesión con Google
     const signInWithGoogle = async () => {
         console.log("Ingresando con Google");
         try {
             const result = await signInWithPopup(auth, googleProvider);
-
-            console.log("Nombre: ", result.user.displayName);
-            console.log("Correo electrónico: ", result.user.email);
-            console.log("Foto de perfil: ", result.user.photoURL);
-            navigate("/dashboard");
+            setPhotoURL(result.user.photoURL);
+            navigate("/dashboard", { state: { photoURL: result.user.photoURL, userName: result.user.displayName } });
         } catch (error) {
             console.error("Error al iniciar sesión con Google", error);
         }
@@ -26,7 +38,7 @@ const LoginPage = () => {
 
     return (
         <div className="login-bg flex justify-center items-center h-screen">
-            <div className="w-full max-w-sm p-6  rounded-lg shadow-md bg-gray-800">
+            <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-gray-800">
                 <div className="flex justify-center">
                     <a className="flex items-center space-x-2">
                         <span className="text-4xl">📌</span>
@@ -71,7 +83,11 @@ const LoginPage = () => {
                     </div>
                 </form>
 
-                <a href="#" className="flex items-center justify-center px-6 py-3 mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <a
+                    href="#"
+                    className="flex items-center justify-center px-6 py-3 mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    onClick={signInWithGoogle}
+                >
                     <svg className="w-6 h-6 mx-2" viewBox="0 0 40 40">
                         <path
                             d="M36.3425 16.7358H35V16.6667H20V23.3333H29.4192C28.045 27.2142 24.3525 30 20 30C14.4775 30 10 25.5225 10 20C10 14.4775 14.4775 9.99999 20 9.99999C22.5492 9.99999 24.8683 10.9617 26.6342 12.5325L31.3483 7.81833C28.3717 5.04416 24.39 3.33333 20 3.33333C10.7958 3.33333 3.33335 10.7958 3.33335 20C3.33335 29.2042 10.7958 36.6667 20 36.6667C29.2042 36.6667 36.6667 29.2042 36.6667 20C36.6667 18.8825 36.5517 17.7917 36.3425 16.7358Z"
@@ -91,9 +107,7 @@ const LoginPage = () => {
                         />
                     </svg>
 
-                    <span onClick={signInWithGoogle} className="mx-2">
-                        Ingresar con Google
-                    </span>
+                    <span className="mx-2">Ingresar con Google</span>
                 </a>
 
                 <p className="mt-8 text-xs font-light text-center text-gray-400">

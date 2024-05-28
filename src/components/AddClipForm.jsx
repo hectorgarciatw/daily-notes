@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-const AddClipForm = () => {
+const AddClipForm = ({ width, mt, mb }) => {
     const [expanded, setExpanded] = useState(false);
 
     const toggleForm = () => {
@@ -10,13 +10,19 @@ const AddClipForm = () => {
     };
 
     return (
-        <div className="flex flex-col items-start">
+        <div className={`flex flex-col items-start ${mt} ${mb} ${width} mx-auto`}>
             <div className="w-full mb-4">
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors duration-300" placeholder="Añadir un nuevo clip ..." onClick={toggleForm} />
+                <input
+                    readOnly={true}
+                    onClick={toggleForm}
+                    type="text"
+                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors duration-300"
+                    placeholder="➕ Añadir un nuevo clip ..."
+                    onClick={toggleForm}
+                />
             </div>
             {expanded && (
                 <form className="w-full p-4 border border-gray-300 rounded-md">
-                    {/* Campos del formulario */}
                     <div className="mb-4">
                         <label htmlFor="title" className="block mb-1 font-semibold text-gray-700">
                             Título

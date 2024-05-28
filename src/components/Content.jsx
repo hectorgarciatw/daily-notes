@@ -80,10 +80,13 @@ function Content({ email }) {
     return (
         <section className="text-gray-600 body-font md:px-10 lg:px-30 xl:px-40">
             {clips.length === 0 ? (
-                <Empty />
+                <>
+                    <AddClipForm mt={"mt-[1rem]"} mb={"mb-[-1rem]"} width={"w-1/2"} />
+                    <Empty />
+                </>
             ) : (
                 <div className="container px-5 py-5 mx-auto">
-                    <AddClipForm />
+                    <AddClipForm mt={"mt-[0.5rem]"} mb={"mb-5"} width={"w-full"} />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {clips.map((clip) => (
                             <div key={clip.id} className="mb-8">

@@ -18,7 +18,7 @@ const Dashboard = () => {
     }, [user, loading, navigate]);
 
     // Obtención del avatar y el nombre del usuario
-    const { photoURL, userName } = location.state || {};
+    const { photoURL, userName, email } = location.state || {};
 
     if (loading) {
         return <div>Loading...</div>;
@@ -29,7 +29,7 @@ const Dashboard = () => {
             <Navbar photoURL={photoURL} userName={userName} />
             <div className="flex flex-grow">
                 <header className="flex-grow p-4">
-                    <Content />
+                    <Content email={email} />
                 </header>
             </div>
             <Footer />

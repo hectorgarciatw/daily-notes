@@ -30,7 +30,7 @@ const LoginPage = () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
             setPhotoURL(result.user.photoURL);
-            navigate("/dashboard", { state: { photoURL: result.user.photoURL, userName: result.user.displayName } });
+            navigate("/dashboard", { state: { photoURL: result.user.photoURL, userName: result.user.displayName, email: result.user.email } });
         } catch (error) {
             console.error("Error al iniciar sesión con Google", error);
         }

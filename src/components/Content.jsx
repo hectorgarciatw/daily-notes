@@ -1,12 +1,13 @@
 // src/components/Content.js
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, query, where, getFirestore } from "firebase/firestore";
 import ClipLoader from "react-spinners/ClipLoader";
 import Card from "./Card";
+import Empty from "./Empty";
 import DeleteModal from "./DeleteModal";
 
-function Content() {
+function Content({ email }) {
     // Lista de clips obtenidos de Firebase
     const [clips, setClips] = useState([]);
     // Estado del spinner asociado a la carga de los clips
@@ -20,7 +21,8 @@ function Content() {
         const fetchClips = async () => {
             try {
                 const clipsCollection = collection(db, "clips");
-                const clipsSnapshot = await getDocs(clipsCollection);
+                const q = query(clipsCollection, where("email", "==", email));
+                const clipsSnapshot = await getDocs(q);
                 const clipsData = clipsSnapshot.docs.map((doc) => ({
                     id: doc.id,
                     type: doc.data().type,
@@ -76,15 +78,19 @@ function Content() {
 
     return (
         <section className="text-gray-600 body-font md:px-10 lg:px-30 xl:px-40">
-            <div className="container px-5 py-24 mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {clips.map((clip) => (
-                        <div key={clip.id} className="mb-8">
-                            <Card id={clip.id} title={clip.title} type={clip.type} content={clip.content} priority={clip.priority} url={clip.url} released={clip.released} onDelete={openModal} />
-                        </div>
-                    ))}
+            {clips.length === 0 ? (
+                <Empty />
+            ) : (
+                <div className="container px-5 py-24 mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {clips.map((clip) => (
+                            <div key={clip.id} className="mb-8">
+                                <Card id={clip.id} title={clip.title} type={clip.type} content={clip.content} priority={clip.priority} url={clip.url} released={clip.released} onDelete={openModal} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
             <DeleteModal isOpen={isModalOpen} onClose={closeModal} onConfirm={confirmDelete} />
         </section>
     );

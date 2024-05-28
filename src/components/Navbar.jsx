@@ -94,13 +94,6 @@ function Navbar({ photoURL, userName }) {
                         </div>
 
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <button
-                                className="hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none"
-                                aria-label="show notifications"
-                            >
-                                <FontAwesomeIcon icon={faPlusCircle} size="2x" />
-                            </button>
-
                             <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                                 <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">{photoURL && <img src={photoURL} className="object-cover w-full h-full" alt="avatar" />}</div>
                                 <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">H. García</h3>

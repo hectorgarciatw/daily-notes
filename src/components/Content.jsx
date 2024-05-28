@@ -5,6 +5,7 @@ import { collection, getDocs, deleteDoc, doc, query, where, getFirestore } from 
 import ClipLoader from "react-spinners/ClipLoader";
 import Card from "./Card";
 import Empty from "./Empty";
+import AddClipForm from "./AddClipForm";
 import DeleteModal from "./DeleteModal";
 
 function Content({ email }) {
@@ -81,7 +82,8 @@ function Content({ email }) {
             {clips.length === 0 ? (
                 <Empty />
             ) : (
-                <div className="container px-5 py-24 mx-auto">
+                <div className="container px-5 py-5 mx-auto">
+                    <AddClipForm />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {clips.map((clip) => (
                             <div key={clip.id} className="mb-8">

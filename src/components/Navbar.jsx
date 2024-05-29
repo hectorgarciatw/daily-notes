@@ -31,10 +31,13 @@ function Navbar({ photoURL, userName }) {
 
     // Invocación del toast de bienvenida al usuario
     useEffect(() => {
-        const isWelcomeToastShown = localStorage.getItem('isWelcomeToastShown');
-        if (!isWelcomeToastShown) {
-            notify();
-            localStorage.setItem('isWelcomeToastShown', 'true');
+        if (typeof window !== 'undefined') {
+            // Asegurarse de que el código se ejecuta en el navegador
+            const isWelcomeToastShown = localStorage.getItem('isWelcomeToastShown');
+            if (!isWelcomeToastShown) {
+                notify();
+                localStorage.setItem('isWelcomeToastShown', 'true');
+            }
         }
     }, []);
 

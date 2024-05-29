@@ -12,14 +12,7 @@ const AddClipForm = ({ width, mt, mb }) => {
     return (
         <div className={`flex flex-col items-start ${mt} ${mb} ${width} mx-auto`}>
             <div className="w-full mb-4">
-                <input
-                    readOnly={true}
-                    onClick={toggleForm}
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors duration-300"
-                    placeholder="➕ Añadir un nuevo clip ..."
-                    onClick={toggleForm}
-                />
+                <input readOnly={true} onClick={toggleForm} type="text" className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors duration-300" placeholder="➕ Añadir un nuevo clip ..." />
             </div>
             {expanded && (
                 <form className="w-full p-4 border border-gray-300 rounded-md">

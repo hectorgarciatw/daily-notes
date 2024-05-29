@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { auth, googleProvider } from "../firebase";
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth, googleProvider } from '../firebase';
+import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 
 const LoginPage = () => {
-    // Estado del avatar del usuario
-    const [photoURL, setPhotoURL] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,7 +11,7 @@ const LoginPage = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Usuario ya autenticado, redirigir al dashboard
-                navigate("/dashboard", { state: { photoURL: user.photoURL, userName: user.displayName } });
+                navigate('/dashboard', { state: { photoURL: user.photoURL, userName: user.displayName } });
             }
         });
 
@@ -21,18 +19,16 @@ const LoginPage = () => {
     }, [navigate]);
 
     const handleLogin = () => {
-        navigate("/dashboard");
+        navigate('/dashboard');
     };
 
     // Inicio de sesión con Google
     const signInWithGoogle = async () => {
-        console.log("Ingresando con Google");
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            setPhotoURL(result.user.photoURL);
-            navigate("/dashboard", { state: { photoURL: result.user.photoURL, userName: result.user.displayName, email: result.user.email } });
+            navigate('/dashboard', { state: { photoURL: result.user.photoURL, userName: result.user.displayName, email: result.user.email } });
         } catch (error) {
-            console.error("Error al iniciar sesión con Google", error);
+            console.error('Error al iniciar sesión con Google', error);
         }
     };
 
@@ -111,7 +107,7 @@ const LoginPage = () => {
                 </a>
 
                 <p className="mt-8 text-xs font-light text-center text-gray-400">
-                    No tienes una cuenta?{" "}
+                    No tienes una cuenta?{' '}
                     <a href="#" className="font-medium text-red-500 hover:underline">
                         Crear cuenta
                     </a>

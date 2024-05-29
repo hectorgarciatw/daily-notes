@@ -1,14 +1,11 @@
-import React, { useEffect } from "react";
-import Content from "../components/Content";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import React, { useEffect } from 'react';
+import Content from '../components/Content';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 
 const Dashboard = () => {
     const location = useLocation();
@@ -17,12 +14,12 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (!loading && !user) {
-            navigate("/");
+            navigate('/');
         }
     }, [user, loading, navigate]);
 
     // Obtención del avatar y el nombre del usuario
-    const { photoURL, userName, email } = location.state || {};
+    const { photoURL, userName, email } = location.state || { email: undefined };
 
     if (loading) {
         return <div>Loading...</div>;

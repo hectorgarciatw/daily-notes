@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Asegúrate de tener esta importación
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Asegúrate de tener esta importación
 
 // Importa los iconos específicos que necesitas usar
-import { faPlusCircle, faSignOutAlt, faTrash, faClock, faClipboard, faNoteSticky } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSignOutAlt, faTrash, faClock, faClipboard, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
+import { auth } from '../firebase';
+import { signOut, getAuth } from 'firebase/auth';
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Navbar({ photoURL, userName }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +20,16 @@ function Navbar({ photoURL, userName }) {
 
     // Implementación del logout de la app
     const handleSignOut = async () => {
+        const auth = getAuth();
         try {
             await signOut(auth);
-            navigate("/");
+            // Limpiar cualquier información de usuario almacenada localmente
+            localStorage.removeItem('user');
+            // Redirigir al usuario a la página de inicio de sesión
+            navigate('/login');
         } catch (error) {
-            console.error("Error al cerrar sesión", error);
-            toast.error("Error al cerrar sesión");
+            console.error('Error al cerrar sesión', error);
+            toast.error('Error al cerrar sesión');
         }
     };
 
@@ -66,7 +70,7 @@ function Navbar({ photoURL, userName }) {
 
                     <div
                         className={`${
-                            isOpen ? "block" : "hidden"
+                            isOpen ? 'block' : 'hidden'
                         } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
                     >
                         <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">

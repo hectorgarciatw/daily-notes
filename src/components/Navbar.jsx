@@ -15,8 +15,18 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function Navbar({ photoURL, userName }) {
     const [isOpen, setIsOpen] = useState(false);
+    // Estado para evitar mostrar el Toast cuando se utiliza la NavBar
+    const [isToastShown, setIsToastShown] = useState(false);
+
     const navigate = useNavigate();
-    const notify = () => toast(`👋 Bienvenido ${userName}`);
+
+    // Muestro el Toast de bienvenida al usuario
+    const notify = () => {
+        if (!isToastShown) {
+            toast(`👋 Bienvenido ${userName}`);
+            setIsToastShown(true);
+        }
+    };
 
     // Implementación del logout de la app
     const handleSignOut = async () => {

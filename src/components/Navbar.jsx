@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from 'react';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Asegúrate de tener esta importación
-
-// Importa los iconos específicos que necesitas usar
-import { faPlusCircle, faSignOutAlt, faTrash, faClock, faClipboard, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faTrash, faClock, faClipboard, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-
-import { auth } from '../firebase';
 import { signOut, getAuth } from 'firebase/auth';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Navbar({ photoURL, userName }) {
     const [isOpen, setIsOpen] = useState(false);
-    // Estado para evitar mostrar el Toast cuando se utiliza la NavBar
-    const [isToastShown, setIsToastShown] = useState(false);
-
     const navigate = useNavigate();
 
-    // Muestro el Toast de bienvenida al usuario
     const notify = () => {
-        if (!isToastShown) {
-            toast(`👋 Bienvenido ${userName}`);
-            setIsToastShown(true);
-        }
+        toast(`👋 Bienvenido ${userName}`);
     };
 
     // Implementación del logout de la app
@@ -45,7 +31,11 @@ function Navbar({ photoURL, userName }) {
 
     // Invocación del toast de bienvenida al usuario
     useEffect(() => {
-        notify();
+        const isWelcomeToastShown = localStorage.getItem('isWelcomeToastShown');
+        if (!isWelcomeToastShown) {
+            notify();
+            localStorage.setItem('isWelcomeToastShown', 'true');
+        }
     }, []);
 
     return (
@@ -110,7 +100,7 @@ function Navbar({ photoURL, userName }) {
                         <div className="flex items-center mt-4 lg:mt-0">
                             <button type="button" className="flex items-center focus:outline-none" aria-label="toggle profile dropdown">
                                 <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">{photoURL && <img src={photoURL} className="object-cover w-full h-full" alt="avatar" />}</div>
-                                <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">H. García</h3>
+                                <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">{userName}</h3>
                             </button>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, googleProvider } from '../firebase';
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
@@ -11,7 +11,7 @@ const LoginPage = () => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Usuario ya autenticado, redirigir al dashboard
-                navigate('/dashboard', { state: { photoURL: user.photoURL, userName: user.displayName } });
+                navigate('/dashboard', { state: { photoURL: user.photoURL, userName: user.displayName, email: user.email } });
             }
         });
 

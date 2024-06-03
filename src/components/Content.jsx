@@ -1,29 +1,27 @@
-// src/components/Content.js
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc, query, where, addDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, query, where, addDoc, updateDoc } from 'firebase/firestore';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Card from './Card';
 import Empty from './Empty';
 import AddClipForm from './AddClipForm';
 import DeleteModal from './DeleteModal';
+import UpdateModal from './UpdateModal';
 
 function Content({ email }) {
-    // Lista de clips obtenidos de Firebase
     const [clips, setClips] = useState([]);
-    // Estado del spinner asociado a la carga de los clips
     const [loading, setLoading] = useState(true);
-    // Estado para controlar la visibilidad del modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    // Estado para identificar el clip a eliminar
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [clipToDelete, setClipToDelete] = useState(null);
+
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [clipToUpdate, setClipToUpdate] = useState(null);
 
     const [userEmail, setUserEmail] = useState(email);
 
     useEffect(() => {
-        // Configura el estado userEmail cuando se renderiza el componente por primera vez
         setUserEmail(email);
-    }, [email]); // El efecto se activa cuando cambia el email recibido
+    }, [email]);
 
     useEffect(() => {
         const fetchClips = async () => {
@@ -37,18 +35,12 @@ function Content({ email }) {
                 const clipsSnapshot = await getDocs(q);
                 const clipsData = clipsSnapshot.docs.map((doc) => ({
                     id: doc.id,
-                    type: doc.data().type,
-                    title: doc.data().title,
-                    content: doc.data().content,
-                    priority: doc.data().priority,
-                    url: doc.data().url,
-                    released: doc.data().released,
+                    ...doc.data(),
                 }));
                 setClips(clipsData);
             } catch (error) {
                 console.error('Error fetching clips: ', error);
             } finally {
-                // Desactivo el spinnner luego de obtener los clips
                 setLoading(false);
             }
         };
@@ -56,14 +48,24 @@ function Content({ email }) {
         fetchClips();
     }, [userEmail]);
 
-    const openModal = (id) => {
+    const openDeleteModal = (id) => {
         setClipToDelete(id);
-        setIsModalOpen(true);
+        setIsDeleteModalOpen(true);
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
         setClipToDelete(null);
+    };
+
+    const openUpdateModal = (clip) => {
+        setClipToUpdate(clip);
+        setIsUpdateModalOpen(true);
+    };
+
+    const closeUpdateModal = () => {
+        setIsUpdateModalOpen(false);
+        setClipToUpdate(null);
     };
 
     const handleEmailChange = (newEmail) => {
@@ -73,18 +75,13 @@ function Content({ email }) {
     const createClip = async (clipData) => {
         try {
             const docRef = await addDoc(collection(db, 'clips'), {
-                title: clipData.title,
-                content: clipData.content,
-                priority: clipData.priority,
-                type: clipData.type,
-                url: clipData.url,
+                ...clipData,
                 email: clipData.email,
                 released: '23-04-2024',
             });
             setClips([...clips, { id: docRef.id, ...clipData, released: false }]);
         } catch (error) {
             console.error('Error creating clip: ', error);
-            console.log('Error creating clip: ' + error.message);
         }
     };
 
@@ -96,12 +93,23 @@ function Content({ email }) {
             } catch (error) {
                 console.error('Error deleting clip: ', error);
             } finally {
-                closeModal();
+                closeDeleteModal();
             }
         }
     };
 
-    // Spinner asociado a la carga de los clips desde Firebase
+    const updateClip = async (id, updatedData) => {
+        try {
+            const clipRef = doc(db, 'clips', id);
+            await updateDoc(clipRef, updatedData);
+            setClips(clips.map((clip) => (clip.id === id ? { id, ...updatedData } : clip)));
+        } catch (error) {
+            console.error('Error updating clip: ', error);
+        } finally {
+            closeUpdateModal();
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -123,13 +131,14 @@ function Content({ email }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {clips.map((clip) => (
                             <div key={clip.id} className="mb-8">
-                                <Card id={clip.id} title={clip.title} type={clip.type} content={clip.content} priority={clip.priority} url={clip.url} released={clip.released} onDelete={openModal} />
+                                <Card id={clip.id} title={clip.title} type={clip.type} content={clip.content} priority={clip.priority} url={clip.url} released={clip.released} onDelete={openDeleteModal} onUpdate={() => openUpdateModal(clip)} />
                             </div>
                         ))}
                     </div>
                 </div>
             )}
-            <DeleteModal isOpen={isModalOpen} onClose={closeModal} onConfirm={confirmDelete} />
+            <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={confirmDelete} />
+            <UpdateModal isOpen={isUpdateModalOpen} onClose={closeUpdateModal} onUpdate={updateClip} clip={clipToUpdate} />
         </section>
     );
 }

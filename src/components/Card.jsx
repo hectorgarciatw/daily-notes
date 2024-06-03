@@ -1,22 +1,22 @@
-import React from "react";
+import React from 'react';
 // Funciones auxiliares
-import { capitalizeFirstLetter } from "../utils/utils";
+import { capitalizeFirstLetter } from '../utils/utils';
 // Iconos
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faLink, faStar, faPen, faBrush } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faLink, faStar, faPen, faBrush } from '@fortawesome/free-solid-svg-icons';
 
-function Card({ id, title, type, content, priority, url, released, onDelete }) {
+function Card({ id, title, type, content, priority, url, released, onDelete, onUpdate }) {
     // Añadir 'id' y 'onDelete' a las props
     const getPriorityColor = (priority) => {
         switch (priority.toLowerCase()) {
-            case "importante":
-                return "bg-red-300 dark:bg-red-400 text-white dark:text-white";
-            case "ocasional":
-                return "bg-blue-200 dark:bg-blue-300 text-blue-800 dark:text-blue-900";
-            case "urgente":
-                return "bg-red-600 dark:bg-red-500 text-white dark:text-white";
+            case 'importante':
+                return 'bg-red-300 dark:bg-red-400 text-white dark:text-white';
+            case 'ocasional':
+                return 'bg-blue-200 dark:bg-blue-300 text-blue-800 dark:text-blue-900';
+            case 'urgente':
+                return 'bg-red-600 dark:bg-red-500 text-white dark:text-white';
             default:
-                return "bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900";
+                return 'bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900';
         }
     };
 
@@ -47,7 +47,7 @@ function Card({ id, title, type, content, priority, url, released, onDelete }) {
                     <a href="#" className="text-gray-300 text-base mr-2">
                         <FontAwesomeIcon icon={faBrush} className="hover:text-red-500" />
                     </a>
-                    <a href="#" className="text-gray-300 text-base">
+                    <a href="#" className="text-gray-300 text-base" onClick={() => onUpdate()}>
                         <FontAwesomeIcon icon={faPen} className="hover:text-red-500" />
                     </a>
                 </div>

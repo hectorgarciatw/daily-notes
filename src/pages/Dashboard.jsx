@@ -35,16 +35,6 @@ const Dashboard = () => {
                 </header>
             </div>
             <Footer />
-            {/* 
-            <div className="flex items-center mt-4 lg:mt-0">
-                <button
-                    className="fixed top-24 right-4 hidden mx-4 text-gray-600 transition-colors duration-300 transform lg:block dark:text-gray-200 hover:text-gray-700 dark:hover:text-gray-400 focus:text-gray-700 dark:focus:text-gray-400 focus:outline-none"
-                    aria-label="show notifications"
-                >
-                    <FontAwesomeIcon icon={faPlusCircle} size="3x" />
-                </button>
-            </div>
-            */}
         </div>
     );
 };

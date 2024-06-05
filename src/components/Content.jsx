@@ -21,6 +21,7 @@ function Content({ email }) {
     const [clipToUpdate, setClipToUpdate] = useState(null);
 
     useEffect(() => {
+        // Obtenemos los clips del usuario desde Firebase
         const fetchClips = async () => {
             try {
                 if (!email) {
@@ -45,6 +46,7 @@ function Content({ email }) {
         fetchClips();
     }, [email]);
 
+    // Modal de elimanción de un Clip
     const openDeleteModal = (id) => {
         setClipToDelete(id);
         setIsDeleteModalOpen(true);
@@ -55,6 +57,7 @@ function Content({ email }) {
         setClipToDelete(null);
     };
 
+    // Modal de modificación de un Clip
     const openUpdateModal = (clip) => {
         setClipToUpdate(clip);
         setIsUpdateModalOpen(true);
@@ -65,6 +68,7 @@ function Content({ email }) {
         setClipToUpdate(null);
     };
 
+    // Lógica de creación de un Clip
     const createClip = async (clipData) => {
         try {
             const docRef = await addDoc(collection(db, 'clips'), {
@@ -73,38 +77,45 @@ function Content({ email }) {
                 released: '23-04-2024',
             });
             setClips([...clips, { id: docRef.id, ...clipData, released: false }]);
+            toast('✔️ Clip creado con éxito');
         } catch (error) {
             console.error('Error creating clip: ', error);
+            toast.error('Error en la creación del Clip');
         }
     };
 
+    // Lógica de eliminación de un Clip
     const confirmDelete = async () => {
         if (clipToDelete) {
             try {
                 await deleteDoc(doc(db, 'clips', clipToDelete));
                 setClips(clips.filter((clip) => clip.id !== clipToDelete));
+                toast('✔️ Clip eliminado con éxito');
             } catch (error) {
                 console.error('Error deleting clip: ', error);
+                toast.error('Error al eliminar el Clip');
             } finally {
                 closeDeleteModal();
             }
         }
     };
 
+    // Lógica de modificación de un Clip
     const updateClip = async (id, updatedData) => {
         try {
             const clipRef = doc(db, 'clips', id);
             await updateDoc(clipRef, updatedData);
             setClips(clips.map((clip) => (clip.id === id ? { id, ...updatedData } : clip)));
-            toast('✔️ Tarjeta actualizada con éxito');
+            toast('✔️ Clip actualizado con éxito');
         } catch (error) {
             console.error('Error updating clip: ', error);
-            toast.error('Error al actualizar la tarjeta');
+            toast.error('Error al actualizar el Clip');
         } finally {
             closeUpdateModal();
         }
     };
 
+    // Spinner de la precarga de Clips en el Dashboard
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -117,6 +128,7 @@ function Content({ email }) {
         <section className="text-gray-600 body-font md:px-10 lg:px-30 xl:px-40">
             {clips.length === 0 ? (
                 <>
+                    {/* Componente del formulario para agregar un nuevo Clip */}
                     <AddClipForm mt={'mt-[1rem]'} mb={'mb-[-1rem]'} width={'w-1/2'} email={email} createClip={createClip} />
                     <Empty />
                 </>
@@ -124,6 +136,7 @@ function Content({ email }) {
                 <div className="container px-5 py-5 mx-auto">
                     <AddClipForm mt={'mt-[0.5rem]'} mb={'mb-5'} width={'w-full'} email={email} createClip={createClip} />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* Renderizando las cards correspondientes a los Clips obtenidos */}
                         {clips.map((clip) => (
                             <div key={clip.id} className="mb-8">
                                 <Card id={clip.id} title={clip.title} type={clip.type} content={clip.content} priority={clip.priority} url={clip.url} released={clip.released} onDelete={openDeleteModal} onUpdate={() => openUpdateModal(clip)} />
@@ -134,6 +147,7 @@ function Content({ email }) {
             )}
             <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={confirmDelete} />
             <UpdateModal isOpen={isUpdateModalOpen} onClose={closeUpdateModal} onUpdate={updateClip} clip={clipToUpdate} />
+            {/* Componente asociado al manejador de Toast */}
             <ToastContainer autoClose={1500} theme="dark" />
         </section>
     );

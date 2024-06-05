@@ -8,6 +8,9 @@ import AddClipForm from './AddClipForm';
 import DeleteModal from './DeleteModal';
 import UpdateModal from './UpdateModal';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function Content({ email }) {
     const [clips, setClips] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,12 +19,6 @@ function Content({ email }) {
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [clipToUpdate, setClipToUpdate] = useState(null);
-
-    const [userEmail, setUserEmail] = useState(email);
-
-    useEffect(() => {
-        setUserEmail(email);
-    }, [email]);
 
     useEffect(() => {
         const fetchClips = async () => {
@@ -46,7 +43,7 @@ function Content({ email }) {
         };
 
         fetchClips();
-    }, [userEmail]);
+    }, [email]);
 
     const openDeleteModal = (id) => {
         setClipToDelete(id);
@@ -66,10 +63,6 @@ function Content({ email }) {
     const closeUpdateModal = () => {
         setIsUpdateModalOpen(false);
         setClipToUpdate(null);
-    };
-
-    const handleEmailChange = (newEmail) => {
-        setUserEmail(newEmail);
     };
 
     const createClip = async (clipData) => {
@@ -103,8 +96,10 @@ function Content({ email }) {
             const clipRef = doc(db, 'clips', id);
             await updateDoc(clipRef, updatedData);
             setClips(clips.map((clip) => (clip.id === id ? { id, ...updatedData } : clip)));
+            toast('✔️ Tarjeta actualizada con éxito');
         } catch (error) {
             console.error('Error updating clip: ', error);
+            toast.error('Error al actualizar la tarjeta');
         } finally {
             closeUpdateModal();
         }
@@ -139,6 +134,7 @@ function Content({ email }) {
             )}
             <DeleteModal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} onConfirm={confirmDelete} />
             <UpdateModal isOpen={isUpdateModalOpen} onClose={closeUpdateModal} onUpdate={updateClip} clip={clipToUpdate} />
+            <ToastContainer autoClose={1500} theme="dark" />
         </section>
     );
 }

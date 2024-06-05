@@ -112,8 +112,11 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
                                         <Field name="url" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500 dark:border-gray-300" />
                                         <ErrorMessage name="url" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="col-span-full">
-                                        <button type="submit" disabled={isSubmitting} className="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    <div className="col-span-full flex justify-between">
+                                        <button type="button" onClick={toggleForm} className="w-1/2 mr-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" disabled={isSubmitting} className="w-1/2 ml-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                             {isSubmitting ? 'Creando clip...' : 'Crear Clip'}
                                         </button>
                                     </div>

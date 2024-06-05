@@ -35,9 +35,6 @@ function Card({ id, title, type, content, priority, url, released, onDelete, onU
             <div>
                 <div className="flex items-center justify-center mt-4">
                     {/* Enlaces para acciones */}
-                    <a href="#" className="text-gray-300 text-base mr-2" onClick={() => onDelete(id)}>
-                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
-                    </a>
                     <a href={url} className="text-gray-300 text-base mr-2">
                         <FontAwesomeIcon icon={faLink} className="hover:text-red-500" />
                     </a>
@@ -47,8 +44,11 @@ function Card({ id, title, type, content, priority, url, released, onDelete, onU
                     <a href="#" className="text-gray-300 text-base mr-2">
                         <FontAwesomeIcon icon={faBrush} className="hover:text-red-500" />
                     </a>
-                    <a href="#" className="text-gray-300 text-base" onClick={() => onUpdate()}>
+                    <a href="#" className="text-gray-300 text-base mr-2" onClick={() => onUpdate()}>
                         <FontAwesomeIcon icon={faPen} className="hover:text-red-500" />
+                    </a>
+                    <a href="#" className="text-gray-300 text-base" onClick={() => onDelete(id)}>
+                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
                     </a>
                 </div>
             </div>

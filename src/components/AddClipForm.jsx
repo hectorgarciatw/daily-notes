@@ -51,7 +51,7 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
     };
 
     return (
-        <div className={`flex flex-col items-start ${mt} ${mb} ${width} mx-auto`}>
+        <div className={`flex flex-col items-start ${mt} ${mb}  mx-auto w-full`}>
             <div className="w-full mb-4">
                 <button onClick={toggleForm} className="w-full p-3 text-white  border border-gray-300 rounded-md focus:outline-none focus:border-white transition-colors duration-300">
                     ➕ Añadir un nuevo clip ...

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function Footer() {
     return (
@@ -36,18 +36,18 @@ function Footer() {
 
                     <div className="flex mt-3 -mx-2 sm:mt-0">
                         <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
-                            {' '}
-                            Mi blog personal{' '}
+                            {" "}
+                            Mi blog personal{" "}
+                        </a>
+
+                        <a href="https://github.com/hectorgarciatw" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                            {" "}
+                            Visita mi GitHub{" "}
                         </a>
 
                         <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
-                            {' '}
-                            Visita mi GitHub{' '}
-                        </a>
-
-                        <a href="#" className="mx-2 text-sm text-white transition-colors duration-300 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
-                            {' '}
-                            Contacto{' '}
+                            {" "}
+                            Contacto{" "}
                         </a>
                     </div>
                 </div>

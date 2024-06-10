@@ -3,18 +3,38 @@ import React, { useState, useEffect, useRef } from "react";
 import { capitalizeFirstLetter } from "../utils/utils";
 // Iconos
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faLink, faStar, faPen, faBrush } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faLink, faStar, faPen, faBrush, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 // Para cambiar de color los fondos de las Cards
 import { CirclePicker } from "react-color";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
+// Animación de los iconos de los Clips
 import { motion } from "framer-motion";
 
 function Card({ id, title, type, content, priority, url, released, color, onDelete, onUpdate }) {
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [selectedColor, setSelectedColor] = useState(color);
+    // Estado del dropdown para compartir clips
+    const [showDropdown, setShowDropdown] = useState(false);
+
     const cardRef = useRef(null);
+
+    // Manipulación del envío de un Clip por plataforma
+    const handleShare = (platform) => {
+        if (platform === "whatsapp") {
+            // Lógica para compartir en WhatsApp
+            const message = `Title: ${title}\nContent: ${content}\nType: ${type}\nPriority: ${priority}\nURL: ${url}`;
+            const whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, "_blank");
+        } else if (platform === "gmail") {
+            // Lógica para compartir por correo electrónico (Gmail)
+            const emailSubject = `Clip: ${title}`;
+            const emailBody = `Content: ${content}\nType: ${type}\nPriority: ${priority}\nURL: ${url}`;
+            const gmailLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+            window.location.href = gmailLink;
+        }
+    };
 
     // Establece el color de la prioridad según su tipo
     const getPriorityColor = (priority) => {
@@ -55,6 +75,13 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
         }
     };
 
+    // Maneja el clic fuera del dropdown
+    const handleClickOutsideDropdown = (event) => {
+        if (showDropdown && cardRef.current && !cardRef.current.contains(event.target)) {
+            setShowDropdown(false);
+        }
+    };
+
     // Manejo de los click's externos para ocultar selector de color de la Card
     useEffect(() => {
         if (showColorPicker) {
@@ -67,6 +94,15 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
             document.removeEventListener("click", handleClickOutside);
         };
     }, [showColorPicker]);
+
+    // Manejo del clic externo para cerrar el dropdown
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutsideDropdown);
+
+        return () => {
+            document.removeEventListener("click", handleClickOutsideDropdown);
+        };
+    });
 
     return (
         <div ref={cardRef} className="relative w-full max-w-sm px-4 py-3 bg-white rounded-md shadow-md dark:bg-gray-800" style={setColor()}>
@@ -83,6 +119,23 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
             <div>
                 <div className="flex items-center justify-center mt-4">
                     {/* Enlaces para acciones */}
+                    <div className="text-gray-300 text-base mr-2 relative">
+                        <motion.div whileHover={{ scale: 1.4 }}>
+                            <FontAwesomeIcon icon={faShareNodes} className="hover:text-green-400 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)} />
+                        </motion.div>
+
+                        {showDropdown && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg" style={{ zIndex: showDropdown ? "10" : "-1" }}>
+                                <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" onClick={() => handleShare("whatsapp")}>
+                                    Compartir en WhatsApp
+                                </button>
+                                <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left" onClick={() => handleShare("gmail")}>
+                                    Compartir por correo electrónico (Gmail)
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
                     <motion.a href={url} className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
                         <FontAwesomeIcon icon={faLink} className="hover:text-gray-400" />
                     </motion.a>
@@ -101,7 +154,7 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                         <FontAwesomeIcon icon={faBrush} className="hover:text-pink-500" />
                     </motion.a>
                     <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onUpdate()}>
-                        <FontAwesomeIcon icon={faPen} className="hover:text-green-500" />
+                        <FontAwesomeIcon icon={faPen} className="hover:text-purple-500" />
                     </motion.a>
                     <motion.a href="#" className="text-gray-300 text-base" whileHover={{ scale: 1.4 }} onClick={() => onDelete(id)}>
                         <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />

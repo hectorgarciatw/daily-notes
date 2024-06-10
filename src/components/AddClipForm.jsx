@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 // Manipulación del Form
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 // Manejo de esquema de validación
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
 // Sanitización de los contenidos del Form
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
 const AddClipForm = ({ width, mt, mb, email, createClip }) => {
     const initialValues = {
-        title: '',
-        content: '',
-        priority: 'Ocasional',
-        type: '',
-        url: '',
+        title: "",
+        content: "",
+        priority: "Ocasional",
+        type: "",
+        url: "",
     };
 
     // Definición de las validaciones
     const validationSchema = Yup.object().shape({
-        title: Yup.string().min(5, 'Debe contener al menos 5 caracteres').max(25, 'Debe contener menos de  25 caracteres').required('El título es requerido'),
-        content: Yup.string().min(10, 'Debe contener al menos 10 caracteres').max(150, 'Debe contener menos de  150 caracteres').required('El contenido es requerido'),
-        type: Yup.string().min(5, 'Debe contener al menos 5 caracteres').max(25, 'Debe contener menos de  25 caracteres').required('El tipo es requerido'),
-        url: Yup.string().max(80, 'Debe contener menos de  80 caracteres').url('Ingrese una URL válida').nullable(),
+        title: Yup.string().min(5, "Debe contener al menos 5 caracteres").max(25, "Debe contener menos de  25 caracteres").required("El título es requerido"),
+        content: Yup.string().min(10, "Debe contener al menos 10 caracteres").max(150, "Debe contener menos de  150 caracteres").required("El contenido es requerido"),
+        type: Yup.string().min(5, "Debe contener al menos 5 caracteres").max(25, "Debe contener menos de  25 caracteres").required("El tipo es requerido"),
+        url: Yup.string().max(80, "Debe contener menos de  80 caracteres").url("Ingrese una URL válida").nullable(),
     });
 
     const [expanded, setExpanded] = useState(false);
@@ -117,7 +117,7 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
                                             Cancelar
                                         </button>
                                         <button type="submit" disabled={isSubmitting} className="w-1/2 ml-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                            {isSubmitting ? 'Creando clip...' : 'Crear Clip'}
+                                            {isSubmitting ? "Creando clip..." : "Crear Clip"}
                                         </button>
                                     </div>
                                 </div>

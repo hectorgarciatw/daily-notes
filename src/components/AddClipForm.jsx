@@ -51,68 +51,73 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
     };
 
     return (
-        <div className={` flex flex-col items-start ${mt} ${mb} ${width} mx-auto`}>
+        <div className={`flex flex-col items-start ${mt} ${mb} mx-auto w-full`}>
             <div className="w-full mb-4">
-                <button onClick={toggleForm} className="w-full p-3 text-white border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 transition-colors duration-300">
+                <button onClick={toggleForm} className="w-full p-3 text-white  border border-gray-300 rounded-md focus:outline-none focus:border-white transition-colors duration-300">
                     ➕ Añadir un nuevo clip ...
                 </button>
             </div>
             {expanded && (
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
                     {({ isSubmitting }) => (
-                        <Form className="container flex flex-col mx-auto space-y-12">
-                            <fieldset className="grid grid-cols-4 gap-6 p-6 rounded-md shadow-sm dark:bg-gray-50">
-                                <div className="space-y-2 col-span-full lg:col-span-1">
+                        <Form className="container flex flex-col mx-auto space-y-6">
+                            <fieldset className="p-4 rounded-md shadow-sm dark:bg-gray-50">
+                                <div className="space-y-2 mb-4">
                                     <p className="font-medium">Creación de clip</p>
                                     <p className="text-xs">Complete los campos del siguiente formulario para crear un nuevo clip</p>
                                 </div>
-                                <div className="grid grid-cols-6 gap-4 col-span-full lg:col-span-3">
-                                    <div className="col-span-full">
+                                <div className="space-y-4">
+                                    <div>
                                         <label htmlFor="title" className="text-sm">
                                             Título <span className="text-red-500">*</span>
                                         </label>
-                                        <Field name="title" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500  dark:border-gray-300" />
+                                        <Field name="title" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500 dark:border-gray-300" />
                                         <ErrorMessage name="title" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="col-span-full">
+
+                                    <div>
                                         <label htmlFor="content" className="text-sm">
                                             Contenido <span className="text-red-500">*</span>
                                         </label>
                                         <Field name="content" as="textarea" className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500" placeholder="Ingrese la descripción aquí" />
                                         <ErrorMessage name="content" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="col-span-full relative">
-                                        <label htmlFor="priority" className="text-sm">
+
+                                    <div className="relative flex flex-col">
+                                        <label htmlFor="priority" className="text-sm mb-1">
                                             Prioridad <span className="text-red-500">*</span>
                                         </label>
-                                        <Field
-                                            name="priority"
-                                            as="select"
-                                            className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 text-sm py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        >
-                                            <option value="Ocasional">Ocasional</option>
-                                            <option value="Importante">Importante</option>
-                                            <option value="Urgente">Urgente</option>
-                                        </Field>
-                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                            <FontAwesomeIcon icon={faChevronDown} />
+                                        <div className="relative">
+                                            <Field
+                                                name="priority"
+                                                as="select"
+                                                className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 text-sm py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            >
+                                                <option value="Ocasional">Ocasional</option>
+                                                <option value="Importante">Importante</option>
+                                                <option value="Urgente">Urgente</option>
+                                            </Field>
+                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <FontAwesomeIcon icon={faChevronDown} />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="col-span-full sm:col-span-3">
+
+                                    <div>
                                         <label htmlFor="type" className="text-sm">
                                             Tipo <span className="text-red-500">*</span>
                                         </label>
                                         <Field name="type" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500 dark:border-gray-300" />
                                         <ErrorMessage name="type" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="col-span-full sm:col-span-3">
+                                    <div>
                                         <label htmlFor="url" className="text-sm">
                                             URL (enlace externo opcional)
                                         </label>
                                         <Field name="url" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500 dark:border-gray-300" />
                                         <ErrorMessage name="url" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="col-span-full flex justify-between">
+                                    <div className="flex justify-between">
                                         <button type="button" onClick={toggleForm} className="w-1/2 mr-2 bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                             Cancelar
                                         </button>

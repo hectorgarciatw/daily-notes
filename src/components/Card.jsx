@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 // Funciones auxiliares
 import { capitalizeFirstLetter } from "../utils/utils";
 // Iconos
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faLink, faStar, faPen, faBrush, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+
 // Para cambiar de color los fondos de las Cards
 import { CirclePicker } from "react-color";
 import { doc, updateDoc } from "firebase/firestore";

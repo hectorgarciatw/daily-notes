@@ -51,7 +51,7 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
     };
 
     return (
-        <div className={`flex flex-col items-start ${mt} ${mb}  mx-auto w-full`}>
+        <div className={`flex flex-col items-start ${mt} ${mb} mx-auto w-full`}>
             <div className="w-full mb-4">
                 <button onClick={toggleForm} className="w-full p-3 text-white  border border-gray-300 rounded-md focus:outline-none focus:border-white transition-colors duration-300">
                     ➕ Añadir un nuevo clip ...
@@ -74,6 +74,7 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
                                         <Field name="title" type="text" className="w-full rounded-md focus:border-gray-500 dark:text-gray-500 dark:border-gray-300" />
                                         <ErrorMessage name="title" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
+
                                     <div>
                                         <label htmlFor="content" className="text-sm">
                                             Contenido <span className="text-red-500">*</span>
@@ -81,23 +82,27 @@ const AddClipForm = ({ width, mt, mb, email, createClip }) => {
                                         <Field name="content" as="textarea" className="w-full h-32 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-gray-500" placeholder="Ingrese la descripción aquí" />
                                         <ErrorMessage name="content" component="div" className="text-red-500 text-xs mt-1" />
                                     </div>
-                                    <div className="relative">
-                                        <label htmlFor="priority" className="text-sm">
+
+                                    <div className="relative flex flex-col">
+                                        <label htmlFor="priority" className="text-sm mb-1">
                                             Prioridad <span className="text-red-500">*</span>
                                         </label>
-                                        <Field
-                                            name="priority"
-                                            as="select"
-                                            className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 text-sm py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        >
-                                            <option value="Ocasional">Ocasional</option>
-                                            <option value="Importante">Importante</option>
-                                            <option value="Urgente">Urgente</option>
-                                        </Field>
-                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                            <FontAwesomeIcon icon={faChevronDown} />
+                                        <div className="relative">
+                                            <Field
+                                                name="priority"
+                                                as="select"
+                                                className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 text-sm py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            >
+                                                <option value="Ocasional">Ocasional</option>
+                                                <option value="Importante">Importante</option>
+                                                <option value="Urgente">Urgente</option>
+                                            </Field>
+                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                                <FontAwesomeIcon icon={faChevronDown} />
+                                            </div>
                                         </div>
                                     </div>
+
                                     <div>
                                         <label htmlFor="type" className="text-sm">
                                             Tipo <span className="text-red-500">*</span>

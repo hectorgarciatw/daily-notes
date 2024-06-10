@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 // Funciones auxiliares
-import { capitalizeFirstLetter } from "../utils/utils";
+import { capitalizeFirstLetter } from '../utils/utils';
 // Iconos
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faLink, faStar, faPen, faBrush } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faLink, faStar, faPen, faBrush } from '@fortawesome/free-solid-svg-icons';
 // Para cambiar de color los fondos de las Cards
-import { CirclePicker } from "react-color";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { CirclePicker } from 'react-color';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 function Card({ id, title, type, content, priority, url, released, color, onDelete, onUpdate }) {
     const [showColorPicker, setShowColorPicker] = useState(false);
@@ -19,14 +19,14 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     // Establece el color de la prioridad según su tipo
     const getPriorityColor = (priority) => {
         switch (priority.toLowerCase()) {
-            case "importante":
-                return "bg-red-400 text-white";
-            case "ocasional":
-                return "bg-white text-gray-800";
-            case "urgente":
-                return "bg-red-700 text-white";
+            case 'importante':
+                return 'bg-red-400 text-white';
+            case 'ocasional':
+                return 'bg-white text-gray-800';
+            case 'urgente':
+                return 'bg-red-700 text-white';
             default:
-                return "bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900";
+                return 'bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900';
         }
     };
 
@@ -34,18 +34,18 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     const handleColorChange = async (color) => {
         setSelectedColor(color.hex);
         try {
-            const docRef = doc(db, "clips", id);
+            const docRef = doc(db, 'clips', id);
             await updateDoc(docRef, {
                 color: color.hex,
             });
         } catch (error) {
-            console.error("Error updating color in Firebase: ", error);
+            console.error('Error updating color in Firebase: ', error);
         }
     };
 
     // Se establece el color de fondo de la Card
     const setColor = () => {
-        return { backgroundColor: selectedColor, color: "white" };
+        return { backgroundColor: selectedColor, color: 'white' };
     };
 
     // Maneja el clic fuera del CirclePicker o Card
@@ -58,13 +58,13 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     // Manejo de los click's externos para ocultar selector de color de la Card
     useEffect(() => {
         if (showColorPicker) {
-            document.addEventListener("click", handleClickOutside);
+            document.addEventListener('click', handleClickOutside);
         } else {
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, [showColorPicker]);
 
@@ -115,14 +115,14 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                         className="mt-8"
                         color={selectedColor}
                         onChange={handleColorChange}
-                        colors={["#1F2937", "#007A2A", "#027BC0", "#EB144C", "#1A1A1A", "#8b12a3"]}
+                        colors={['#1F2937', '#007A2A', '#027BC0', '#EB144C', '#1A1A1A', '#8b12a3']}
                         circleSize={24}
                         circleSpacing={14}
                         styles={{
                             default: {
                                 circle: {
-                                    border: "2px solid white", // Cambia el color del borde según sea necesario
-                                    boxShadow: "0 0 5px rgba(0,0,0,0.3)", // Añade sombra para mayor visibilidad
+                                    border: '2px solid white', // Cambia el color del borde según sea necesario
+                                    boxShadow: '0 0 5px rgba(0,0,0,0.3)', // Añade sombra para mayor visibilidad
                                 },
                             },
                         }}

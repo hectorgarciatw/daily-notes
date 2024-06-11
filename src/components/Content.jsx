@@ -135,7 +135,7 @@ function Content({ email }) {
             ) : (
                 <div className="container px-5 py-5 mx-auto">
                     <AddClipForm mt={"mt-[0.5rem]"} mb={"mb-5"} width={"w-full"} email={email} createClip={createClip} />
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 gap-y-12">
                         {/* Renderizando las cards correspondientes a los Clips obtenidos */}
                         {clips.map((clip) => (
                             <div key={clip.id} className="mb-8">

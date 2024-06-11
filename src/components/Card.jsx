@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { capitalizeFirstLetter } from "../utils/utils";
 // Iconos
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faLink, faStar, faPen, faBrush, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faLink, faStar, faPen, faPalette, faBars, faShareNodes, faEnvelope, faUser, faComment, faWifi } from "@fortawesome/free-solid-svg-icons";
 // Para cambiar de color los fondos de las Cards
 import { CirclePicker } from "react-color";
 import { doc, updateDoc } from "firebase/firestore";
@@ -91,9 +91,32 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
             </div>
             <div>
                 <div className="flex items-center justify-center mt-4">
-                    <div className="text-gray-300 text-base mr-2 relative">
+                    <motion.a href={url} className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
+                        <FontAwesomeIcon icon={faLink} className="hover:text-gray-400" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
+                        <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500" />
+                    </motion.a>
+                    <motion.a
+                        href="#"
+                        className="text-gray-300 text-base mr-2"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setShowColorPicker(!showColorPicker);
+                        }}
+                        whileHover={{ scale: 1.4 }}
+                    >
+                        <FontAwesomeIcon icon={faPalette} className="hover:text-pink-500" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onUpdate()}>
+                        <FontAwesomeIcon icon={faPen} className="hover:text-purple-500" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-3" whileHover={{ scale: 1.4 }} onClick={() => onDelete(id)}>
+                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
+                    </motion.a>
+                    <div className="text-gray-300 text-base relative">
                         <motion.div whileHover={{ scale: 1.4 }}>
-                            <FontAwesomeIcon icon={faShareNodes} className="hover:text-green-400 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)} />
+                            <FontAwesomeIcon icon={faBars} className="hover:text-purple-700 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)} />
                         </motion.div>
                         {showDropdown && (
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 ml-14 mt-2 z-50 w-56">
@@ -102,28 +125,23 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                         href="#_"
                                         className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
                                     >
-                                        <span>Crear Clip</span>
-                                        <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘T</span>
-                                    </a>
-                                    <a
-                                        href="#_"
-                                        className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
-                                    >
-                                        <span>Eliminar Clip</span>
+                                        <FontAwesomeIcon icon={faTrash} className="hover:text-black mr-2" />
+                                        <span onClick={() => onDelete(id)}>Eliminar Clip</span>
                                         <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
                                     </a>
                                     <a
                                         href="#_"
                                         className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
                                     >
-                                        <span>Editar Clip</span>
-                                        <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
-                                    </a>
-                                    <a
-                                        href="#_"
-                                        className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
-                                    >
-                                        <span> Clip</span>
+                                        <FontAwesomeIcon icon={faPen} className="hover:text-black mr-2" />
+                                        <span
+                                            onClick={() => {
+                                                onUpdate();
+                                                setShowDropdown(false);
+                                            }}
+                                        >
+                                            Editar Clip
+                                        </span>
                                         <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
                                     </a>
                                     <div
@@ -135,6 +153,7 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                     </div>
                                     <div className="relative w-full group">
                                         <div className="flex cursor-default select-none items-center rounded px-2 hover:bg-neutral-100 py-1.5 outline-none">
+                                            <FontAwesomeIcon icon={faShareNodes} className="hover:text-black mr-2" />
                                             <span>Compartir</span>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 ml-auto">
                                                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -146,16 +165,19 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                                     onClick={() => handleShare("whatsapp")}
                                                     className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                                                 >
+                                                    <FontAwesomeIcon icon={faComment} className="hover:text-black mr-2" />
                                                     Whatsapp
                                                 </div>
                                                 <div
                                                     onClick={() => handleShare("gmail")}
                                                     className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                                                 >
+                                                    <FontAwesomeIcon icon={faEnvelope} className="hover:text-black mr-2" />
                                                     Gmail
                                                 </div>
                                                 <div className="h-px my-1 -mx-1 bg-neutral-200"></div>
                                                 <div className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+                                                    <FontAwesomeIcon icon={faWifi} className="hover:text-black mr-2" />
                                                     Otras redes
                                                 </div>
                                             </div>
@@ -180,77 +202,34 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                         <span>Mostrar recordatorios</span>
                                     </div>
                                     <div className="h-px my-1 -mx-1 bg-neutral-200"></div>
-                                    <div x-data="{ contextMenuPeople: 'adam' }" className="relative">
-                                        <div className="relative flex cursor-default select-none items-center rounded py-1.5 pl-8 pr-2 hover:bg-neutral-100 outline-none data-[disabled]:opacity-50">
-                                            <span x-show="contextMenuPeople=='adam'" className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="w-2 h-2 fill-current"
-                                                >
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                </svg>
-                                            </span>
-                                            <span>Marcelo Perez</span>
-                                        </div>
-                                        <div className="relative flex cursor-default select-none items-center rounded py-1.5 pl-8 pr-2 hover:bg-neutral-100 outline-none data-[disabled]:opacity-50">
-                                            <span x-show="contextMenuPeople=='caleb'" className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="w-2 h-2 fill-current"
-                                                >
-                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                </svg>
-                                            </span>
-                                            <span>Miguel Gonzalez</span>
-                                        </div>
-                                    </div>
+                                    <a
+                                        href="#_"
+                                        className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
+                                    >
+                                        <FontAwesomeIcon icon={faUser} className="hover:text-black mr-2" />
+                                        <span>Juan Perez</span>
+                                        <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
+                                    </a>
+                                    <a
+                                        href="#_"
+                                        className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
+                                    >
+                                        <FontAwesomeIcon icon={faUser} className="hover:text-black mr-2" />
+                                        <span>Marcelo Gonzalez</span>
+                                        <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
+                                    </a>
                                 </div>
                             </div>
                         )}
                     </div>
-                    <motion.a href={url} className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
-                        <FontAwesomeIcon icon={faLink} className="hover:text-gray-400" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
-                        <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500" />
-                    </motion.a>
-                    <motion.a
-                        href="#"
-                        className="text-gray-300 text-base mr-2"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setShowColorPicker(!showColorPicker);
-                        }}
-                        whileHover={{ scale: 1.4 }}
-                    >
-                        <FontAwesomeIcon icon={faBrush} className="hover:text-pink-500" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onUpdate()}>
-                        <FontAwesomeIcon icon={faPen} className="hover:text-purple-500" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base" whileHover={{ scale: 1.4 }} onClick={() => onDelete(id)}>
-                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
-                    </motion.a>
                 </div>
             </div>
             {showColorPicker && (
-                <div className="absolute top-0 left-0 z-10 flex items-center justify-center w-full h-full">
+                <div
+                    className="circlesColor absolute left-0 z-10 flex items-center justify-center w-full h-[50px]" // Agrega h-50px para establecer la altura
+                    style={{ top: "calc(100%)" }} // Posiciona 10px por debajo de la tarjeta
+                >
+                    <div className="w-full h-[50px] absolute bg-gray-100 opacity-80 rounded-md"></div> {/* Fondo detrás del CirclePicker */}
                     <CirclePicker
                         color={selectedColor}
                         onChange={handleColorChange}

@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 // Funciones auxiliares
-import { capitalizeFirstLetter } from "../utils/utils";
+import { capitalizeFirstLetter } from '../utils/utils';
 // Iconos
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faLink, faStar, faPen, faPalette, faBars, faShareNodes, faEnvelope, faUser, faComment, faWifi } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faLink, faStar, faPen, faPalette, faBars, faShareNodes, faEnvelope, faUser, faComment, faWifi } from '@fortawesome/free-solid-svg-icons';
+import { faXTwitter, faFacebook, faLinkedin, faTelegram, faSlack } from '@fortawesome/free-brands-svg-icons';
 // Para cambiar de color los fondos de las Cards
-import { CirclePicker } from "react-color";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { CirclePicker } from 'react-color';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 // Animación de los iconos de los Clips
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 
 function Card({ id, title, type, content, priority, url, released, color, onDelete, onUpdate }) {
     const [showColorPicker, setShowColorPicker] = useState(false);
@@ -21,28 +22,56 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     // Establece el color de la prioridad según su tipo
     const getPriorityColor = (priority) => {
         switch (priority.toLowerCase()) {
-            case "importante":
-                return "bg-red-400 text-white";
-            case "ocasional":
-                return "bg-white text-gray-800";
-            case "urgente":
-                return "bg-red-700 text-white";
+            case 'importante':
+                return 'bg-red-400 text-white';
+            case 'ocasional':
+                return 'bg-white text-gray-800';
+            case 'urgente':
+                return 'bg-red-700 text-white';
             default:
-                return "bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900";
+                return 'bg-gray-200 dark:bg-gray-300 text-gray-800 dark:text-gray-900';
         }
     };
 
-    // Manipulación del envío de un Clip por plataforma
+    // Compartir Clip por redes sociales
     const handleShare = (platform) => {
-        const message = `Title: ${title}\nContent: ${content}\nType: ${type}\nPriority: ${priority}\nURL: ${url}`;
-        if (platform === "whatsapp") {
+        let message = 'Clip reenviado a través de QuickClips:\n';
+        if (title) {
+            message += `Título: ${capitalizeFirstLetter(title)}\n`;
+        }
+        if (content) {
+            message += `Contenido: ${capitalizeFirstLetter(content)}\n`;
+        }
+        if (type) {
+            message += `Tipo: ${capitalizeFirstLetter(type)}\n`;
+        }
+        if (priority) {
+            message += `Prioridad: ${capitalizeFirstLetter(priority)}\n`;
+        }
+        if (url) {
+            message += `URL: ${url}`;
+        }
+
+        if (platform === 'whatsapp') {
             const whatsappLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-            window.open(whatsappLink, "_blank");
-        } else if (platform === "gmail") {
-            const emailSubject = `Clip: ${title}`;
-            const emailBody = message;
-            const gmailLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-            window.location.href = gmailLink;
+            window.open(whatsappLink, '_blank');
+        } else if (platform === 'gmail') {
+            console.log('GMAIL');
+        } else if (platform === 'facebook') {
+            const facebookLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(message)}`;
+            window.open(facebookLink, '_blank');
+        } else if (platform === 'twitter') {
+            const twitterLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+            window.open(twitterLink, '_blank');
+        } else if (platform === 'linkedin') {
+            const linkedinLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&summary=${encodeURIComponent(message)}`;
+            window.open(linkedinLink, '_blank');
+        } else if (platform === 'telegram') {
+            const telegramLink = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+            window.open(telegramLink, '_blank');
+        } else if (platform === 'slack') {
+            const slackLink = `https://slack.com/intl/en-in/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+            window.open(slackLink, '_blank');
         }
     };
 
@@ -50,18 +79,18 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     const handleColorChange = async (color) => {
         setSelectedColor(color.hex);
         try {
-            const docRef = doc(db, "clips", id);
+            const docRef = doc(db, 'clips', id);
             await updateDoc(docRef, {
                 color: color.hex,
             });
         } catch (error) {
-            console.error("Error updating color in Firebase: ", error);
+            console.error('Error updating color in Firebase: ', error);
         }
     };
 
     // Se establece el color de fondo de la Card
     const setColor = () => {
-        return { backgroundColor: selectedColor, color: "white" };
+        return { backgroundColor: selectedColor, color: 'white' };
     };
 
     // Maneja el clic fuera del CirclePicker o Card
@@ -73,9 +102,9 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
     };
 
     useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
         return () => {
-            document.removeEventListener("click", handleClickOutside);
+            document.removeEventListener('click', handleClickOutside);
         };
     }, []);
 
@@ -162,23 +191,53 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                         <div data-submenu className="absolute top-0 right-0 invisible mr-1 duration-200 ease-out translate-x-full opacity-0 group-hover:mr-0 group-hover:visible group-hover:opacity-100">
                                             <div className="z-50 min-w-[8rem] overflow-hidden rounded-md border bg-white p-1 shadow-md animate-in slide-in-from-left-1 w-48">
                                                 <div
-                                                    onClick={() => handleShare("whatsapp")}
+                                                    onClick={() => handleShare('whatsapp')}
                                                     className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                                                 >
                                                     <FontAwesomeIcon icon={faComment} className="hover:text-black mr-2" />
                                                     Whatsapp
                                                 </div>
                                                 <div
-                                                    onClick={() => handleShare("gmail")}
+                                                    onClick={() => handleShare('gmail')}
                                                     className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                                                 >
                                                     <FontAwesomeIcon icon={faEnvelope} className="hover:text-black mr-2" />
                                                     Gmail
                                                 </div>
-                                                <div className="h-px my-1 -mx-1 bg-neutral-200"></div>
-                                                <div className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-                                                    <FontAwesomeIcon icon={faWifi} className="hover:text-black mr-2" />
-                                                    Otras redes
+                                                <div
+                                                    onClick={() => handleShare('xtwitter')}
+                                                    className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                                >
+                                                    <FontAwesomeIcon icon={faXTwitter} className="hover:text-black mr-2" />
+                                                    Xtwitter
+                                                </div>
+                                                <div
+                                                    onClick={() => handleShare('facebook')}
+                                                    className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                                >
+                                                    <FontAwesomeIcon icon={faFacebook} className="hover:text-black mr-2" />
+                                                    Facebook
+                                                </div>
+                                                <div
+                                                    onClick={() => handleShare('linkedin')}
+                                                    className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                                >
+                                                    <FontAwesomeIcon icon={faLinkedin} className="hover:text-black mr-2" />
+                                                    Linkedin
+                                                </div>
+                                                <div
+                                                    onClick={() => handleShare('telegram')}
+                                                    className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                                >
+                                                    <FontAwesomeIcon icon={faTelegram} className="hover:text-black mr-2" />
+                                                    Telegram
+                                                </div>
+                                                <div
+                                                    onClick={() => handleShare('slack')}
+                                                    className="relative flex cursor-default select-none items-center rounded px-2 py-1.5 hover:bg-neutral-100 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+                                                >
+                                                    <FontAwesomeIcon icon={faSlack} className="hover:text-black mr-2" />
+                                                    Salck
                                                 </div>
                                             </div>
                                         </div>
@@ -227,20 +286,20 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
             {showColorPicker && (
                 <div
                     className="circlesColor absolute left-0 z-10 flex items-center justify-center w-full h-[50px]" // Agrega h-50px para establecer la altura
-                    style={{ top: "calc(100%)" }} // Posiciona 10px por debajo de la tarjeta
+                    style={{ top: 'calc(100%)' }} // Posiciona 10px por debajo de la tarjeta
                 >
                     <div className="w-full h-[50px] absolute bg-gray-100 opacity-80 rounded-md"></div> {/* Fondo detrás del CirclePicker */}
                     <CirclePicker
                         color={selectedColor}
                         onChange={handleColorChange}
-                        colors={["#1F2937", "#007A2A", "#027BC0", "#EB144C", "#1A1A1A", "#8b12a3"]}
+                        colors={['#1F2937', '#007A2A', '#027BC0', '#EB144C', '#1A1A1A', '#8b12a3']}
                         circleSize={24}
                         circleSpacing={14}
                         styles={{
                             default: {
                                 circle: {
-                                    border: "2px solid white",
-                                    boxShadow: "0 0 5px rgba(0,0,0,0.3)",
+                                    border: '2px solid white',
+                                    boxShadow: '0 0 5px rgba(0,0,0,0.3)',
                                 },
                             },
                         }}

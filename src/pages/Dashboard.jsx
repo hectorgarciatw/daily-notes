@@ -19,7 +19,7 @@ const Dashboard = () => {
     }, [user, loading, navigate]);
 
     // Obtención del avatar y el nombre del usuario
-    const { photoURL, userName, email } = location.state || { email: undefined };
+    const { photoURL, userName, email, calendarAccessToken } = location.state || { email: undefined };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -31,7 +31,8 @@ const Dashboard = () => {
 
             <div className="flex flex-grow">
                 <header className="flex-grow p-4">
-                    <Content email={email} />
+                    {/* Pasamos calendarAccessToken como prop a Content */}
+                    <Content email={email} calendarAccessToken={calendarAccessToken} />
                 </header>
             </div>
             <Footer />

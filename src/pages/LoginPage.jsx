@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, googleProvider } from '../firebase';
+import { auth, googleProvider, functions } from '../firebase'; // Asegúrate de importar functions desde '../firebase'
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 
 const LoginPage = () => {
@@ -10,8 +10,14 @@ const LoginPage = () => {
         // Escucha los cambios de autenticación del usuario
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Usuario ya autenticado, redirigir al dashboard
-                navigate('/dashboard', { state: { photoURL: user.photoURL, userName: user.displayName, email: user.email } });
+                // Usuario autenticado, redirigir al dashboard
+                navigate('/dashboard', {
+                    state: {
+                        photoURL: user.photoURL,
+                        userName: user.displayName,
+                        email: user.email,
+                    },
+                });
             }
         });
 
@@ -26,12 +32,23 @@ const LoginPage = () => {
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
-            navigate('/dashboard', { state: { photoURL: result.user.photoURL, userName: result.user.displayName, email: result.user.email } });
+            const getCalendarAccessToken = functions.httpsCallable('getGoogleCalendarAccessToken');
+            const response = await getCalendarAccessToken();
+
+            console.log('Token de acceso de Google Calendar:', response.data.accessToken);
+
+            navigate('/dashboard', {
+                state: {
+                    photoURL: result.user.photoURL,
+                    userName: result.user.displayName,
+                    email: result.user.email,
+                    calendarAccessToken: response.data.accessToken,
+                },
+            });
         } catch (error) {
-            console.error('Error al iniciar sesión con Google', error);
+            console.error('Error al iniciar sesión con Google o al obtener el token de acceso:', error);
         }
     };
-
     return (
         <div className="login-bg flex justify-center items-center min-h-screen h-full">
             <div className="w-full max-w-sm p-6 rounded-lg shadow-md bg-gray-800">

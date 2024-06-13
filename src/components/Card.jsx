@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { capitalizeFirstLetter } from '../utils/utils';
 // Iconos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faLink, faStar, faPen, faPalette, faBars, faShareNodes, faEnvelope, faUser, faComment, faWifi } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faLink, faStar, faPen, faPalette, faBarsStaggered, faCalendarDays, faShareNodes, faEnvelope, faUser, faComment } from '@fortawesome/free-solid-svg-icons';
 import { faXTwitter, faFacebook, faLinkedin, faTelegram, faSlack } from '@fortawesome/free-brands-svg-icons';
 // Para cambiar de color los fondos de las Cards
 import { CirclePicker } from 'react-color';
@@ -12,12 +12,75 @@ import { db } from '../firebase';
 // Animación de los iconos de los Clips
 import { motion } from 'framer-motion';
 
-function Card({ id, title, type, content, priority, url, released, color, onDelete, onUpdate }) {
+// Selector de fecha para la selección en Google Calendar
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+function Card({ id, title, type, content, priority, url, released, color, calendarAccessToken, onDelete, onUpdate }) {
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [selectedColor, setSelectedColor] = useState(color);
     // Estado del dropdown para compartir clips
     const [showDropdown, setShowDropdown] = useState(false);
+    // Estado del selector de fechas para el Calendar
+    const [eventDate, setEventDate] = useState(null);
+
     const cardRef = useRef(null);
+
+    const handleDateChange = (date) => {
+        setEventDate(date);
+    };
+
+    // Agregar info del Clip en Calendar
+    const addCalendar = async () => {
+        console.log(`TOKEN: ${calendarAccessToken}`);
+        if (!eventDate) {
+            alert('Por favor, selecciona una fecha y hora para el evento.');
+            return;
+        }
+
+        // Construye la descripción del evento
+        let description = `Tipo: ${capitalizeFirstLetter(type)}\n`;
+        description += `Prioridad: ${capitalizeFirstLetter(priority)}\n`;
+        description += `Contenido: ${capitalizeFirstLetter(content)}\n`;
+        description += `URL: ${url}`;
+
+        // Construye el objeto de evento con la fecha y hora seleccionadas
+        const event = {
+            summary: capitalizeFirstLetter(title),
+            description: description,
+            start: {
+                dateTime: eventDate.toISOString(),
+                timeZone: 'America/Los_Angeles',
+            },
+            end: {
+                dateTime: eventDate.toISOString(),
+                timeZone: 'America/Los_Angeles',
+            },
+            reminders: {
+                useDefault: false,
+                overrides: [{ method: 'popup', minutes: 30 }],
+            },
+        };
+
+        try {
+            const response = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${calendarAccessToken}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(event),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al agregar evento a Google Calendar');
+            }
+
+            console.log('Evento agregado correctamente a Google Calendar');
+        } catch (error) {
+            console.error('Error al agregar evento a Google Calendar:', error);
+        }
+    };
 
     // Establece el color de la prioridad según su tipo
     const getPriorityColor = (priority) => {
@@ -120,35 +183,12 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
             </div>
             <div>
                 <div className="flex items-center justify-center mt-4">
-                    <motion.a href={url} className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
-                        <FontAwesomeIcon icon={faLink} className="hover:text-gray-400" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
-                        <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500" />
-                    </motion.a>
-                    <motion.a
-                        href="#"
-                        className="text-gray-300 text-base mr-2"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setShowColorPicker(!showColorPicker);
-                        }}
-                        whileHover={{ scale: 1.4 }}
-                    >
-                        <FontAwesomeIcon icon={faPalette} className="hover:text-pink-500" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onUpdate()}>
-                        <FontAwesomeIcon icon={faPen} className="hover:text-purple-500" />
-                    </motion.a>
-                    <motion.a href="#" className="text-gray-300 text-base mr-3" whileHover={{ scale: 1.4 }} onClick={() => onDelete(id)}>
-                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
-                    </motion.a>
                     <div className="text-gray-300 text-base relative">
                         <motion.div whileHover={{ scale: 1.4 }}>
-                            <FontAwesomeIcon icon={faBars} className="hover:text-purple-700 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)} />
+                            <FontAwesomeIcon icon={faBarsStaggered} className="hover:text-purple-700 cursor-pointer mr-2" onClick={() => setShowDropdown(!showDropdown)} />
                         </motion.div>
                         {showDropdown && (
-                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 ml-14 mt-2 z-50 w-56">
+                            <div className="absolute left-0 top-full mt-2 z-50 w-56">
                                 <div className="p-1 mt-1 text-sm bg-white border rounded-md shadow-md border-neutral-200/70 text-neutral-700">
                                     <a
                                         href="#_"
@@ -173,12 +213,13 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                         </span>
                                         <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⌘N</span>
                                     </a>
-                                    <div
-                                        className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none"
-                                        data-disabled
-                                    >
-                                        <span>Calendario (en beta)</span>
+                                    <div className="relative flex justify-between w-full cursor-default select-none group items-center rounded px-2 py-1.5 hover:bg-neutral-100 hover:text-neutral-900 outline-none data-[disabled]:opacity-50 data-[disabled]:pointer-events-none">
+                                        <FontAwesomeIcon icon={faCalendarDays} className="hover:text-black mr-2" />
+                                        <span onClick={() => addCalendar()}>Añadir a calendario</span>
                                         <span className="ml-auto text-xs tracking-widest text-neutral-400 group-hover:text-neutral-600">⇧⌘N</span>
+                                    </div>
+                                    <div className="mt-4">
+                                        <DatePicker selected={eventDate} onChange={handleDateChange} showTimeSelect timeIntervals={15} timeFormat="HH:mm" dateFormat="MMMM d, yyyy h:mm aa" placeholderText="Selecciona fecha y hora del evento" />
                                     </div>
                                     <div className="relative w-full group">
                                         <div className="flex cursor-default select-none items-center rounded px-2 hover:bg-neutral-100 py-1.5 outline-none">
@@ -258,7 +299,7 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                                                 <polyline points="20 6 9 17 4 12"></polyline>
                                             </svg>
                                         </span>
-                                        <span>Mostrar recordatorios</span>
+                                        <span className="data-disabled">Mostrar recordatorios</span>
                                     </div>
                                     <div className="h-px my-1 -mx-1 bg-neutral-200"></div>
                                     <a
@@ -281,6 +322,29 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                             </div>
                         )}
                     </div>
+                    <motion.a href={url} target="_blank" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
+                        <FontAwesomeIcon icon={faLink} className="hover:text-gray-400" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }}>
+                        <FontAwesomeIcon icon={faStar} className="hover:text-yellow-500" />
+                    </motion.a>
+                    <motion.a
+                        href="#"
+                        className="text-gray-300 text-base mr-2"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setShowColorPicker(!showColorPicker);
+                        }}
+                        whileHover={{ scale: 1.4 }}
+                    >
+                        <FontAwesomeIcon icon={faPalette} className="hover:text-pink-500" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onUpdate()}>
+                        <FontAwesomeIcon icon={faPen} className="hover:text-purple-500" />
+                    </motion.a>
+                    <motion.a href="#" className="text-gray-300 text-base mr-2" whileHover={{ scale: 1.4 }} onClick={() => onDelete(id)}>
+                        <FontAwesomeIcon icon={faTrash} className="hover:text-red-500" />
+                    </motion.a>
                 </div>
             </div>
             {showColorPicker && (
@@ -292,7 +356,7 @@ function Card({ id, title, type, content, priority, url, released, color, onDele
                     <CirclePicker
                         color={selectedColor}
                         onChange={handleColorChange}
-                        colors={['#1F2937', '#007A2A', '#027BC0', '#EB144C', '#1A1A1A', '#8b12a3']}
+                        colors={['#1F2937', '#056827', '#0B4667', '#E70E46', '#1A1A1A', '#8b12a3']}
                         circleSize={24}
                         circleSpacing={14}
                         styles={{

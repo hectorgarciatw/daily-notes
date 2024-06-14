@@ -1,24 +1,39 @@
 import React, { useState, useEffect } from 'react';
+// Configuración de Firebase
 import { db } from '../firebase';
 import { collection, getDocs, deleteDoc, doc, query, where, addDoc, updateDoc } from 'firebase/firestore';
+// Spinner de carga de Clips
 import ClipLoader from 'react-spinners/ClipLoader';
+
+// Importación de componentes
 import Card from './Card';
 import Empty from './Empty';
 import AddClipForm from './AddClipForm';
 import DeleteModal from './DeleteModal';
 import UpdateModal from './UpdateModal';
 
+// Iconos
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+
+// Manipulación de Toasts
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Content({ email, calendarAccessToken }) {
+    // Manejo de los Clips obtenidos de la DB
     const [clips, setClips] = useState([]);
+    // Estado del Spinner
     const [loading, setLoading] = useState(true);
+    // Estado del modal de eliminación
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [clipToDelete, setClipToDelete] = useState(null);
-
+    // Estado del modal de modificación
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [clipToUpdate, setClipToUpdate] = useState(null);
+
+    // Manejo el estado del término de búsqueda
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         // Obtenemos los clips del usuario desde Firebase
@@ -115,6 +130,9 @@ function Content({ email, calendarAccessToken }) {
         }
     };
 
+    // Lista de Clips que cumplen el criterio de búsqueda
+    const filteredClips = clips.filter((clip) => clip.title.toLowerCase().includes(searchTerm.toLowerCase()) || clip.type.toLowerCase().includes(searchTerm.toLowerCase()) || clip.content.toLowerCase().includes(searchTerm.toLowerCase()));
+
     // Spinner de la precarga de Clips en el Dashboard
     if (loading) {
         return (
@@ -135,25 +153,45 @@ function Content({ email, calendarAccessToken }) {
             ) : (
                 <div className="container px-5 py-5 mx-auto">
                     <AddClipForm mt={'mt-[0.5rem]'} mb={'mb-5'} width={'w-full'} email={email} createClip={createClip} />
+                    <div className="relative mb-8">
+                        {/* Buscador de Clips */}
+                        <input
+                            type="text"
+                            placeholder="Filtrar en los clips almacenados..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full p-2 pl-10 pr-10 border border-gray-300 rounded-md"
+                            style={{ paddingRight: '2.5rem' }} // Ajuste para dar espacio al ícono
+                        />
+                        {/* Icono de lupa dentro del input de la búsqueda/filtro */}
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <FontAwesomeIcon icon={faSearch} className="text-gray-400" />
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 gap-y-12">
                         {/* Renderizando las cards correspondientes a los Clips obtenidos */}
-                        {clips.map((clip) => (
-                            <div key={clip.id} className="mb-8">
-                                <Card
-                                    id={clip.id}
-                                    title={clip.title}
-                                    type={clip.type}
-                                    content={clip.content}
-                                    priority={clip.priority}
-                                    url={clip.url}
-                                    released={clip.released}
-                                    color={clip.color}
-                                    calendarAccessToken={calendarAccessToken}
-                                    onDelete={openDeleteModal}
-                                    onUpdate={() => openUpdateModal(clip)}
-                                />
-                            </div>
-                        ))}
+                        {filteredClips.length > 0 ? (
+                            filteredClips.map((clip) => (
+                                <div key={clip.id} className="mb-8">
+                                    <Card
+                                        id={clip.id}
+                                        title={clip.title}
+                                        type={clip.type}
+                                        content={clip.content}
+                                        priority={clip.priority}
+                                        url={clip.url}
+                                        released={clip.released}
+                                        color={clip.color}
+                                        calendarAccessToken={calendarAccessToken}
+                                        onDelete={openDeleteModal}
+                                        onUpdate={() => openUpdateModal(clip)}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-white">No se encontraron clips relacionados</p>
+                        )}
                     </div>
                 </div>
             )}

@@ -28,7 +28,6 @@ const Dashboard = () => {
     return (
         <div className="flex flex-col min-h-screen dashboard">
             <Navbar photoURL={photoURL} userName={userName} />
-
             <div className="flex flex-grow">
                 <header className="flex-grow p-4">
                     {/* Pasamos calendarAccessToken como prop a Content */}

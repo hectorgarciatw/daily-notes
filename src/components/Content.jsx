@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 // Configuración de Firebase
-import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc, query, where, addDoc, updateDoc } from 'firebase/firestore';
+import { db } from "../firebase";
+import { collection, getDocs, deleteDoc, doc, query, where, addDoc, updateDoc } from "firebase/firestore";
 // Spinner de carga de Clips
-import ClipLoader from 'react-spinners/ClipLoader';
+import ClipLoader from "react-spinners/ClipLoader";
 
 // Importación de componentes
-import Card from './Card';
-import Empty from './Empty';
-import AddClipForm from './AddClipForm';
-import DeleteModal from './DeleteModal';
-import UpdateModal from './UpdateModal';
+import Card from "./Card";
+import Empty from "./Empty";
+import AddClipForm from "./AddClipForm";
+import DeleteModal from "./DeleteModal";
+import UpdateModal from "./UpdateModal";
 
 // Iconos
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 // Manipulación de Toasts
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Content({ email, calendarAccessToken }) {
     // Manejo de los Clips obtenidos de la DB
@@ -33,18 +33,18 @@ function Content({ email, calendarAccessToken }) {
     const [clipToUpdate, setClipToUpdate] = useState(null);
 
     // Manejo el estado del término de búsqueda
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         // Obtenemos los clips del usuario desde Firebase
         const fetchClips = async () => {
             try {
                 if (!email) {
-                    console.error('Error: Email is undefined');
+                    console.error("Error: Email is undefined");
                     return;
                 }
-                const clipsCollection = collection(db, 'clips');
-                const q = query(clipsCollection, where('email', '==', email));
+                const clipsCollection = collection(db, "clips");
+                const q = query(clipsCollection, where("email", "==", email));
                 const clipsSnapshot = await getDocs(q);
                 const clipsData = clipsSnapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -52,7 +52,7 @@ function Content({ email, calendarAccessToken }) {
                 }));
                 setClips(clipsData);
             } catch (error) {
-                console.error('Error fetching clips: ', error);
+                console.error("Error fetching clips: ", error);
             } finally {
                 setLoading(false);
             }
@@ -86,16 +86,16 @@ function Content({ email, calendarAccessToken }) {
     // Lógica de creación de un Clip
     const createClip = async (clipData) => {
         try {
-            const docRef = await addDoc(collection(db, 'clips'), {
+            const docRef = await addDoc(collection(db, "clips"), {
                 ...clipData,
                 email: clipData.email,
-                released: '23-04-2024',
+                released: "23-04-2024",
             });
             setClips([...clips, { id: docRef.id, ...clipData, released: false }]);
-            toast('✔️ Clip creado con éxito');
+            toast("✔️ Clip creado con éxito");
         } catch (error) {
-            console.error('Error creating clip: ', error);
-            toast.error('Error en la creación del Clip');
+            console.error("Error creating clip: ", error);
+            toast.error("Error en la creación del Clip");
         }
     };
 
@@ -103,12 +103,12 @@ function Content({ email, calendarAccessToken }) {
     const confirmDelete = async () => {
         if (clipToDelete) {
             try {
-                await deleteDoc(doc(db, 'clips', clipToDelete));
+                await deleteDoc(doc(db, "clips", clipToDelete));
                 setClips(clips.filter((clip) => clip.id !== clipToDelete));
-                toast('✔️ Clip eliminado con éxito');
+                toast("✔️ Clip eliminado con éxito");
             } catch (error) {
-                console.error('Error deleting clip: ', error);
-                toast.error('Error al eliminar el Clip');
+                console.error("Error deleting clip: ", error);
+                toast.error("Error al eliminar el Clip");
             } finally {
                 closeDeleteModal();
             }
@@ -118,13 +118,13 @@ function Content({ email, calendarAccessToken }) {
     // Lógica de modificación de un Clip
     const updateClip = async (id, updatedData) => {
         try {
-            const clipRef = doc(db, 'clips', id);
+            const clipRef = doc(db, "clips", id);
             await updateDoc(clipRef, updatedData);
             setClips(clips.map((clip) => (clip.id === id ? { id, ...updatedData } : clip)));
-            toast('✔️ Clip actualizado con éxito');
+            toast("✔️ Clip actualizado con éxito");
         } catch (error) {
-            console.error('Error updating clip: ', error);
-            toast.error('Error al actualizar el Clip');
+            console.error("Error updating clip: ", error);
+            toast.error("Error al actualizar el Clip");
         } finally {
             closeUpdateModal();
         }
@@ -137,7 +137,7 @@ function Content({ email, calendarAccessToken }) {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
-                <ClipLoader color={'#123abc'} loading={loading} size={150} />
+                <ClipLoader color={"#123abc"} loading={loading} size={150} />
             </div>
         );
     }
@@ -147,12 +147,12 @@ function Content({ email, calendarAccessToken }) {
             {clips.length === 0 ? (
                 <>
                     {/* Componente del formulario para agregar un nuevo Clip */}
-                    <AddClipForm mt={'mt-[1rem]'} mb={'mb-[-1rem]'} width={'w-1/2'} email={email} createClip={createClip} />
+                    <AddClipForm mt={"mt-[1rem]"} mb={"mb-[-1rem]"} width={"w-1/2"} email={email} createClip={createClip} />
                     <Empty />
                 </>
             ) : (
                 <div className="container px-5 py-5 mx-auto">
-                    <AddClipForm mt={'mt-[0.5rem]'} mb={'mb-5'} width={'w-full'} email={email} createClip={createClip} />
+                    <AddClipForm mt={"mt-[0.5rem]"} mb={"mb-5"} width={"w-full"} email={email} createClip={createClip} />
                     <div className="relative mb-8">
                         {/* Buscador de Clips */}
                         <input
@@ -161,7 +161,7 @@ function Content({ email, calendarAccessToken }) {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full p-2 pl-10 pr-10 border border-gray-300 rounded-md"
-                            style={{ paddingRight: '2.5rem' }} // Ajuste para dar espacio al ícono
+                            style={{ paddingRight: "2.5rem" }} // Ajuste para dar espacio al ícono
                         />
                         {/* Icono de lupa dentro del input de la búsqueda/filtro */}
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">

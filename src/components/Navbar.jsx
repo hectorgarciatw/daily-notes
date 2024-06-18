@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faTrash, faClock, faClipboard, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import { signOut, getAuth } from 'firebase/auth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt, faBoltLightning, faTrash, faClock, faClipboard, faNoteSticky, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { signOut, getAuth } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Navbar({ photoURL, userName }) {
     const [isOpen, setIsOpen] = useState(false);
-    // Estado para evitar mostrar el Toast cuando se utiliza la NavBar
     const [isToastShown, setIsToastShown] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+
     const navigate = useNavigate();
 
     const notify = () => {
@@ -19,31 +20,43 @@ function Navbar({ photoURL, userName }) {
         }
     };
 
-    // Implementación del logout de la app
     const handleSignOut = async () => {
         const auth = getAuth();
         try {
             await signOut(auth);
-            // Limpiar cualquier información de usuario almacenada localmente
-            localStorage.removeItem('user');
-            // Redirigir al usuario a la página de inicio de sesión
-            navigate('/login');
+            localStorage.removeItem("user");
+            navigate("/login");
         } catch (error) {
-            console.error('Error al cerrar sesión', error);
-            toast.error('Error al cerrar sesión');
+            console.error("Error al cerrar sesión", error);
+            toast.error("Error al cerrar sesión");
         }
     };
 
-    // Invocación del toast de bienvenida al usuario
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            // Asegurarse de que el código se ejecuta en el navegador
+        if (typeof window !== "undefined") {
             if (!isToastShown) {
                 notify();
-                localStorage.setItem('isWelcomeToastShown', 'true');
+                localStorage.setItem("isWelcomeToastShown", "true");
             }
         }
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showDropdown && !event.target.closest(".dropdown-menu")) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showDropdown]);
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
 
     return (
         <nav className="relative bg-white shadow dark:bg-gray-800">
@@ -77,22 +90,38 @@ function Navbar({ photoURL, userName }) {
 
                     <div
                         className={`${
-                            isOpen ? 'block' : 'hidden'
+                            isOpen ? "block" : "hidden"
                         } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
                     >
                         <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
-                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <FontAwesomeIcon icon={faNoteSticky} className="mr-2" />
-                                Notas
-                            </a>
+                            <div className="relative">
+                                <a
+                                    href="#"
+                                    className="flex items-center px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    onClick={toggleDropdown}
+                                >
+                                    <FontAwesomeIcon icon={faBoltLightning} className="mr-2" />
+                                    Descargar Clips
+                                </a>
+                                {showDropdown && (
+                                    <div className="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl dark:bg-gray-800 dropdown-menu">
+                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                            Descargar JSON
+                                        </a>
+                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                            Descargar CSV
+                                        </a>
+                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                            Descargar XLSX
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
                             <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <FontAwesomeIcon icon={faClock} className="mr-2" />
                                 Recordatorios
                             </a>
-                            <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <FontAwesomeIcon icon={faClipboard} className="mr-2" />
-                                Notas archivadas
-                            </a>
+
                             <a href="#" className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <FontAwesomeIcon icon={faTrash} className="mr-2" />
                                 Papelera

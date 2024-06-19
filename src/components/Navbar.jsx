@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faBoltLightning, faTrash, faClock, faClipboard, faNoteSticky, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faBoltLightning, faTrash, faClock } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { signOut, getAuth } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Importa el hook useClips para leer los Clips de la variable global
+import { useClips } from "./ClipsContext";
+
+// Compatibilidad con archivos de Excel
+import * as XLSX from "xlsx";
+
 function Navbar({ photoURL, userName }) {
+    const { clips } = useClips();
     const [isOpen, setIsOpen] = useState(false);
     const [isToastShown, setIsToastShown] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -58,6 +65,69 @@ function Navbar({ photoURL, userName }) {
         setShowDropdown(!showDropdown);
     };
 
+    // Función auxiliar para convertir texto a array buffer (para la descarga del xlsx)
+    const s2ab = (s) => {
+        const buf = new ArrayBuffer(s.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i < s.length; i++) {
+            view[i] = s.charCodeAt(i) & 0xff;
+        }
+        return buf;
+    };
+
+    // Función para realizar backups de los Clips en diferentes formátos
+    const downloadClips = (fileType) => {
+        let blob = null;
+
+        try {
+            if (fileType === "json") {
+                const json = JSON.stringify(clips, null, 2);
+                blob = new Blob([json], { type: "application/json" });
+            }
+            if (fileType === "csv") {
+                const csv = [
+                    Object.keys(clips[0]).join(","), // Encabezados
+                    ...clips.map((clip) => Object.values(clip).join(",")),
+                ].join("\n");
+
+                // Crear un Blob de tipo text/csv
+                blob = new Blob([csv], { type: "text/csv" });
+            }
+            if (fileType === "xlsx") {
+                // Crear un libro de trabajo (workbook)
+                const wb = XLSX.utils.book_new();
+                // Convertir los datos a una hoja de cálculo (worksheet)
+                const ws = XLSX.utils.json_to_sheet(clips);
+                // Agregar la hoja de cálculo al libro de trabajo
+                XLSX.utils.book_append_sheet(wb, ws, "Clips");
+                // Generar un archivo binario XLSX
+                const wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+                // Convertir el archivo binario a Blob
+                blob = new Blob([s2ab(wbout)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            }
+
+            if (blob) {
+                // Crea una URL para el Blob
+                const url = URL.createObjectURL(blob);
+                // Crea un elemento de enlace
+                const link = document.createElement("a");
+                link.href = url;
+                // Nombre del archivo con la extensión correspondiente que se descargará
+                link.download = "clips." + fileType;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                // Libera la URL del Blob
+                URL.revokeObjectURL(url);
+            } else {
+                throw new Error("No se pudo crear el Blob para descargar el archivo.");
+            }
+        } catch (error) {
+            console.error("Error al descargar el archivo:", error);
+            toast.error("Error al descargar el archivo");
+        }
+    };
+
     return (
         <nav className="relative bg-white shadow dark:bg-gray-800">
             <div className="container px-6 py-4 mx-auto">
@@ -105,13 +175,13 @@ function Navbar({ photoURL, userName }) {
                                 </a>
                                 {showDropdown && (
                                     <div className="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl dark:bg-gray-800 dropdown-menu">
-                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                        <a href="#" onClick={() => downloadClips("json")} className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
                                             Descargar JSON
                                         </a>
-                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                        <a href="#" onClick={() => downloadClips("csv")} className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
                                             Descargar CSV
                                         </a>
-                                        <a href="#" className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
+                                        <a href="#" onClick={() => downloadClips("xlsx")} className="text-center block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600">
                                             Descargar XLSX
                                         </a>
                                     </div>

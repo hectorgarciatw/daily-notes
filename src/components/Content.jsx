@@ -12,6 +12,9 @@ import AddClipForm from "./AddClipForm";
 import DeleteModal from "./DeleteModal";
 import UpdateModal from "./UpdateModal";
 
+// Importa el hook useClips para establecer el arreglo clips de manera global
+import { useClips } from "./ClipsContext";
+
 // Iconos
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -35,6 +38,9 @@ function Content({ email, calendarAccessToken }) {
     // Manejo el estado del término de búsqueda
     const [searchTerm, setSearchTerm] = useState("");
 
+    // Usamos el hook useClips para acceder al arreglo de clips
+    const { setClips: setGlobalClips } = useClips();
+
     useEffect(() => {
         // Obtenemos los clips del usuario desde Firebase
         const fetchClips = async () => {
@@ -51,6 +57,8 @@ function Content({ email, calendarAccessToken }) {
                     ...doc.data(),
                 }));
                 setClips(clipsData);
+                // Actualiza el estado global de los clips
+                setGlobalClips(clipsData);
             } catch (error) {
                 console.error("Error fetching clips: ", error);
             } finally {
@@ -59,7 +67,7 @@ function Content({ email, calendarAccessToken }) {
         };
 
         fetchClips();
-    }, [email]);
+    }, [email, setGlobalClips]);
 
     // Modal de elimanción de un Clip
     const openDeleteModal = (id) => {

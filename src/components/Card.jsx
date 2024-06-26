@@ -3,7 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { capitalizeFirstLetter } from '../utils/utils';
 // Iconos
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faLink, faStar, faPen, faPalette, faCircleDown, faCalendarDays, faShareNodes, faEnvelope, faUser, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faLink, faPen, faPalette, faCircleDown, faCalendarDays, faShareNodes, faEnvelope, faUser, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import { faXTwitter, faFacebook, faLinkedin, faTelegram, faSlack } from '@fortawesome/free-brands-svg-icons';
 // Para cambiar de color los fondos de las Cards
 import { CirclePicker } from 'react-color';
@@ -16,15 +18,32 @@ import { motion } from 'framer-motion';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-function Card({ id, title, type, content, priority, url, released, color, calendarAccessToken, onDelete, onUpdate }) {
+function Card({ id, title, type, content, favorite, priority, url, released, color, calendarAccessToken, onDelete, onUpdate }) {
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [selectedColor, setSelectedColor] = useState(color);
     // Estado del dropdown para compartir clips
     const [showDropdown, setShowDropdown] = useState(false);
     // Estado del selector de fechas para el Calendar
     const [eventDate, setEventDate] = useState(null);
+    // Estado para ver si el clip es o no favorito
+    const [isFavorite, setIsFavorite] = useState(favorite);
 
     const cardRef = useRef(null);
+
+    const toggleFavorite = async () => {
+        // Cambia el estado local de favorito
+        setIsFavorite(!isFavorite);
+
+        // Actualiza el campo 'favorite' en Firebase
+        try {
+            const docRef = doc(db, 'clips', id);
+            await updateDoc(docRef, {
+                favorite: !isFavorite,
+            });
+        } catch (error) {
+            console.error('Error updating favorite in Firebase: ', error);
+        }
+    };
 
     const handleDateChange = (date) => {
         setEventDate(date);
@@ -335,8 +354,9 @@ function Card({ id, title, type, content, priority, url, released, color, calend
                             rotate: -90,
                             borderRadius: '100%',
                         }}
+                        onClick={toggleFavorite}
                     >
-                        <FontAwesomeIcon icon={faStar} />
+                        <FontAwesomeIcon icon={isFavorite ? solidStar : regularStar} className="text-yellow-400" />
                     </motion.a>
                     <motion.a
                         href="#"

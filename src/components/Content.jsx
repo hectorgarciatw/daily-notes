@@ -187,6 +187,7 @@ function Content({ email, calendarAccessToken }) {
                                         title={clip.title}
                                         type={clip.type}
                                         content={clip.content}
+                                        favorite={clip.favorite}
                                         priority={clip.priority}
                                         url={clip.url}
                                         released={clip.released}

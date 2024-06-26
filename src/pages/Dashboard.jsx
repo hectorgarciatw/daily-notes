@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import Content from "../components/Content";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import React, { useEffect } from 'react';
+import Content from '../components/Content';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../firebase';
 
 const Dashboard = () => {
     const location = useLocation();
@@ -14,7 +14,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (!loading && !user) {
-            navigate("/");
+            navigate('/');
         }
     }, [user, loading, navigate]);
 
